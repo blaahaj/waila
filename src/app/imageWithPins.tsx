@@ -1,43 +1,68 @@
-import { LatLong, type ParsedLatLong } from "./LatLong";
+import { LatLong } from "./LatLong";
 import {
   useRef,
   type Dispatch,
   type MouseEventHandler,
   type SetStateAction,
 } from "react";
-import type { Pin } from "./withImage";
+import * as regression from "regression";
+import {
+  addBearingToKnownImagePosition,
+  addBearingToKnownWorldPosition,
+  isValidKnownPosition,
+  type KnownImagePositionPin,
+  type Pin,
+} from "./pin";
 
 function ImageWithPins({
   pins,
   setPins,
   imageSource,
   viewerPosition,
+  regressionResult,
 }: {
   pins: Pin[];
   setPins: Dispatch<SetStateAction<Pin[]>>;
   imageSource: string;
-  viewerPosition: ParsedLatLong;
+  viewerPosition: LatLong | null;
+  regressionResult: regression.Result | null;
 }) {
   const imageRef = useRef<HTMLImageElement>(null);
 
   const imageClick: MouseEventHandler<HTMLImageElement> = (event) => {
     const img = imageRef.current;
     if (!img) return;
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
 
     const rect = img.getBoundingClientRect();
 
     const percentX = ((event.clientX - rect.left) / rect.width) * 100;
     const percentY = ((event.clientY - rect.top) / rect.height) * 100;
 
-    setPins([
-      ...pins,
-      {
-        id: event.timeStamp.toString(),
-        label: "unnamed",
-        inImage: { percentX, percentY },
-        inWorld: LatLong.parse(""),
-      },
-    ]);
+    if (event.shiftKey) {
+      if (viewerPosition) {
+        const pin: KnownImagePositionPin = {
+          type: "known-image-position",
+          id: event.timeStamp.toString(),
+          label: "unknown",
+          inImage: { percentX, percentY },
+        };
+
+        setPins([...pins, pin]);
+      }
+    } else {
+      setPins([
+        ...pins,
+        {
+          type: "known-world-position",
+          id: event.timeStamp.toString(),
+          label: "unnamed",
+          inImage: { percentX, percentY },
+          inWorldSpec: "",
+          inWorld: null,
+        },
+      ]);
+    }
   };
 
   return (
@@ -85,24 +110,42 @@ function ImageWithPins({
           }}
         >
           {pin.label}
-          {viewerPosition.latlong && pin.inWorld.latlong && (
+          {viewerPosition && isValidKnownPosition(pin) && (
             <>
               <br />
-              {pin.inWorld.latlong!.degreesNorth.toString()},{"\xA0"}
-              {pin.inWorld.latlong!.degreesEast.toString()}
+              {pin.inWorld.degreesNorth.toString()},{"\xA0"}
+              {pin.inWorld.degreesEast.toString()}
               <br />
-              {(
-                90 -
-                (Math.atan2(
-                  pin.inWorld.latlong!.degreesNorth -
-                    viewerPosition.latlong!.degreesNorth,
-                  pin.inWorld.latlong!.degreesEast -
-                    viewerPosition.latlong!.degreesEast
-                ) /
-                  Math.PI) *
-                  180
-              ).toPrecision(5)}
+              {addBearingToKnownWorldPosition(
+                pin,
+                viewerPosition
+              ).bearing.toPrecision(8)}
               &deg;
+              {regressionResult && (
+                <>
+                  <br />(
+                  {regressionResult
+                    .predict(pin.inImage.percentX)[1]
+                    .toPrecision(8)}
+                  &deg;)
+                </>
+              )}
+            </>
+          )}
+          {pin.type === "known-image-position" && (
+            <>
+              <br />
+              {regressionResult ? (
+                <>
+                  {addBearingToKnownImagePosition(
+                    pin,
+                    regressionResult
+                  ).bearing.toPrecision(8)}
+                  &deg;
+                </>
+              ) : (
+                "?"
+              )}
             </>
           )}
         </span>

@@ -17,12 +17,14 @@
     "@zendeskgarden/react-theming": "^9.0.0",
     "next": "14.2.15",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "regression": "^2.0.1"
   },
   "devDependencies": {
     "@types/node": "^22",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/regression": "^2.0.6",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
     "postcss": "^8",
