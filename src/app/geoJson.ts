@@ -1,7 +1,19 @@
 import type { LatLong } from "./LatLong";
 
-export function geoJsonUrl(origin: LatLong, bearing: number): string {
-  const data = {
+const radiusInDegrees = 0.5; // 30km or thereabouts
+
+export function geoJsonUrl(
+  origin: LatLong,
+  bearingRange: [number, number]
+): string {
+  const points = bearingRange.map((bearing) => [
+    origin.degreesEast +
+      Math.cos(((90 - bearing) / 180) * Math.PI) * radiusInDegrees,
+    origin.degreesNorth +
+      Math.sin(((90 - bearing) / 180) * Math.PI) * radiusInDegrees,
+  ]);
+
+  const data: GeoJSON.FeatureCollection = {
     type: "FeatureCollection",
     features: [
       {
@@ -9,13 +21,9 @@ export function geoJsonUrl(origin: LatLong, bearing: number): string {
         properties: {},
         geometry: {
           coordinates: [
+            points[0],
             [origin.degreesEast, origin.degreesNorth],
-            [
-              origin.degreesEast +
-                Math.cos(((90 - bearing) / 180) * Math.PI) * 0.5,
-              origin.degreesNorth +
-                Math.sin(((90 - bearing) / 180) * Math.PI) * 0.5,
-            ],
+            points[1],
           ],
           type: "LineString",
         },
