@@ -18,6 +18,7 @@ import WorldItemsTable from "./worldItemsTable";
 import ViewerPosition from "./viewerPosition";
 import { Tabs } from "@zendeskgarden/react-tabs";
 import { polynomial } from "regression";
+import RegressionGraph from "./RegressionGraph";
 
 function WithImage({
   imageSource,
@@ -67,6 +68,7 @@ function WithImage({
                     <Tabs.Tab item="viewerPosition">Camera position</Tabs.Tab>
                     <Tabs.Tab item="imageItems">Image items</Tabs.Tab>
                     <Tabs.Tab item="worldItems">World items</Tabs.Tab>
+                    <Tabs.Tab item="regression">Regression</Tabs.Tab>
                     <Tabs.Tab item="importExport">Import / export</Tabs.Tab>
                     <Tabs.Tab item="options">Options</Tabs.Tab>
                   </Tabs.TabList>
@@ -93,6 +95,16 @@ function WithImage({
                       setWorldItems={setWorldItems}
                       viewerPosition={viewerPosition}
                     />
+                  </Tabs.TabPanel>
+                  <Tabs.TabPanel item="regression">
+                    {regressionResult ? (
+                      <RegressionGraph
+                        regressionResult={regressionResult.forwards}
+                        dataPoints={regressionResult.dataPoints}
+                      />
+                    ) : (
+                      "Not enough data yet"
+                    )}
                   </Tabs.TabPanel>
                   <Tabs.TabPanel item="importExport">
                     <ImportExport

@@ -1,13 +1,5 @@
-import type { ImageItem, ImagePosition } from "@/app/imageItem";
-import {
-  useMemo,
-  useState,
-  type Dispatch,
-  type ReactNode,
-  type RefObject,
-  type SetStateAction,
-} from "react";
-import Pins from "./pins";
+import type { ImagePosition } from "@/app/imageItem";
+import { useMemo, useState, type ReactNode, type RefObject } from "react";
 
 type RectangleDragState =
   | {

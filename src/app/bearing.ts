@@ -34,7 +34,11 @@ export function buildRegression(
   pairedItems: readonly PairedItem[],
   fn: typeof regression.linear,
   options?: regression.Options
-): { forwards: regression.Result; reverse: regression.Result } | null {
+): {
+  forwards: regression.Result;
+  reverse: regression.Result;
+  dataPoints: readonly [number, number][];
+} | null {
   if (!origin) return null;
   if (pairedItems.length < 2) return null;
 
@@ -54,6 +58,7 @@ export function buildRegression(
   return {
     forwards: fn(dataPoints, options),
     reverse: fn(dataPoints.map(([x, bearing]) => [bearing, x])),
+    dataPoints,
   };
 }
 
