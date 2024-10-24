@@ -7,6 +7,7 @@ import regression from "regression";
 import { addBearingsToWorldItem, type WorldItem } from "./worldItem";
 import GeoJSON from "geojson";
 import { randomUUID } from "crypto";
+import { longVee } from "./geoJson";
 
 const averagePositionOf = (points: LatLong[]): LatLong => {
   const degreesNorth =
@@ -91,24 +92,32 @@ function WorldItemsTable({
               },
             };
 
-            const radialLines = worldItems.map(
-              (i): GeoJSON.Feature => ({
-                type: "Feature",
-                properties: {
-                  label: `line to: ${i.label}`,
-                },
-                geometry: {
-                  type: "LineString",
-                  coordinates: [
-                    [viewerPosition!.degreesEast, viewerPosition!.degreesNorth],
-                    ...[averagePositionOf(i.points)].map((latlong) => [
-                      latlong.degreesEast,
-                      latlong.degreesNorth,
-                    ]),
-                  ],
-                },
-              })
-            );
+            const radialLines = worldItems.flatMap((i) => {
+              const bearings = addBearingsToWorldItem(
+                i,
+                viewerPosition!
+              ).bearings;
+              return longVee(viewerPosition!, [bearings.min, bearings.max]);
+            });
+
+            // const radialLines = worldItems.map(
+            //   (i): GeoJSON.Feature => ({
+            //     type: "Feature",
+            //     properties: {
+            //       label: `line to: ${i.label}`,
+            //     },
+            //     geometry: {
+            //       type: "LineString",
+            //       coordinates: [
+            //         [viewerPosition!.degreesEast, viewerPosition!.degreesNorth],
+            //         ...[averagePositionOf(i.points)].map((latlong) => [
+            //           latlong.degreesEast,
+            //           latlong.degreesNorth,
+            //         ]),
+            //       ],
+            //     },
+            //   })
+            // );
 
             const collection: GeoJSON.FeatureCollection = {
               type: "FeatureCollection",
