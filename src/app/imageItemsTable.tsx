@@ -60,13 +60,15 @@ function ImageItemsTable({
   return (
     <Table>
       <Table.Head>
-        <Table.HeaderCell>min x%</Table.HeaderCell>
-        <Table.HeaderCell>max x%</Table.HeaderCell>
-        <Table.HeaderCell>min bearing</Table.HeaderCell>
-        <Table.HeaderCell>max bearing</Table.HeaderCell>
-        <Table.HeaderCell>GeoJSON</Table.HeaderCell>
-        <Table.HeaderCell>Label</Table.HeaderCell>
-        <Table.HeaderCell>Linked world item</Table.HeaderCell>
+        <Table.HeaderRow>
+          <Table.HeaderCell>min x%</Table.HeaderCell>
+          <Table.HeaderCell>max x%</Table.HeaderCell>
+          <Table.HeaderCell>min bearing</Table.HeaderCell>
+          <Table.HeaderCell>max bearing</Table.HeaderCell>
+          <Table.HeaderCell>GeoJSON</Table.HeaderCell>
+          <Table.HeaderCell>Label</Table.HeaderCell>
+          <Table.HeaderCell>Linked world item</Table.HeaderCell>
+        </Table.HeaderRow>
       </Table.Head>
       <Table.Body>
         {imageItems
