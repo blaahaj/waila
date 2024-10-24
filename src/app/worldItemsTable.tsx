@@ -24,7 +24,6 @@ function WorldItemsTable({
   worldItems: readonly WorldItem[];
   setWorldItems: Dispatch<SetStateAction<WorldItem[]>>;
   viewerPosition: LatLong | null;
-  regressionResult: regression.Result | null;
 }) {
   const setData = useMemo(
     () => () => {

@@ -9,6 +9,7 @@ import { type ImageItem, type ImagePosition } from "./imageItem";
 import type { WorldItem } from "./worldItem";
 import regression from "regression";
 import Pins from "@/imageWithPins/pins";
+import type { LatLong } from "./LatLong";
 
 type RectangleDragState =
   | {
@@ -27,15 +28,18 @@ function ImageWithPins({
   setImageItems,
   imageSource,
   worldItems,
-  regressionResult,
+  reverseRegressionResult,
+  viewerPosition,
 }: {
   imageItems: ImageItem[];
   setImageItems: Dispatch<SetStateAction<ImageItem[]>>;
   imageSource: string;
   worldItems?: WorldItem[];
-  regressionResult: regression.Result | null;
+  reverseRegressionResult: regression.Result | null;
+  viewerPosition: LatLong | null;
 }) {
   const imageRef = useRef<HTMLImageElement>(null);
+  const [showPredictedPositions, setShowPredictedPositions] = useState(false);
 
   const [drag, setDrag] = useState<RectangleDragState>();
 
@@ -47,6 +51,21 @@ function ImageWithPins({
         height: "75vh",
         overflow: "scroll",
       }}
+      // onClickCapture={useMemo(() => event => {}, [])}
+      onKeyDownCapture={useMemo(
+        () => (event) => {
+          console.log(event);
+          if (event.key === "Alt") setShowPredictedPositions(true);
+        },
+        [setShowPredictedPositions]
+      )}
+      onKeyUpCapture={useMemo(
+        () => (event) => {
+          console.log(event);
+          if (event.key === "Alt") setShowPredictedPositions(false);
+        },
+        [setShowPredictedPositions]
+      )}
       onMouseDownCapture={useMemo(
         () => (event) => {
           if (!imageRef.current) return;
@@ -179,6 +198,9 @@ function ImageWithPins({
         imageItems={imageItems}
         worldItems={worldItems}
         imageRef={imageRef}
+        showPredictedPositions={showPredictedPositions}
+        reverseRegressionResult={reverseRegressionResult}
+        viewerPosition={viewerPosition}
       />
     </div>
   );

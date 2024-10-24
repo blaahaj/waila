@@ -10,12 +10,14 @@ import type { WorldItem } from "./worldItem";
 import {
   buildRegression,
   leastSquaresLinear,
+  naiveLinear,
   type PairedItem,
 } from "./bearing";
 import ImageItemsTable from "./imageItemsTable";
 import WorldItemsTable from "./worldItemsTable";
 import ViewerPosition from "./viewerPosition";
 import { Tabs } from "@zendeskgarden/react-tabs";
+import { polynomial } from "regression";
 
 function WithImage({
   imageSource,
@@ -40,7 +42,7 @@ function WithImage({
     viewerPosition,
     pairedItems,
     leastSquaresLinear,
-    { precision: 10 }
+    { precision: 10, order: 3 }
   );
 
   return (
@@ -55,7 +57,8 @@ function WithImage({
                   setImageItems={setImageItems}
                   imageSource={imageSource}
                   worldItems={worldItems}
-                  regressionResult={regressionResult}
+                  reverseRegressionResult={regressionResult?.reverse ?? null}
+                  viewerPosition={viewerPosition}
                 />
               </Grid.Row>
               <Grid.Row style={{ marginTop: "1em" }}>
@@ -81,7 +84,7 @@ function WithImage({
                       setImageItems={setImageItems}
                       worldItems={worldItems}
                       viewerPosition={viewerPosition}
-                      regressionResult={regressionResult}
+                      regressionResult={regressionResult?.forwards ?? null}
                     />
                   </Tabs.TabPanel>
                   <Tabs.TabPanel item="worldItems">
@@ -89,7 +92,6 @@ function WithImage({
                       worldItems={worldItems}
                       setWorldItems={setWorldItems}
                       viewerPosition={viewerPosition}
-                      regressionResult={regressionResult}
                     />
                   </Tabs.TabPanel>
                   <Tabs.TabPanel item="importExport">

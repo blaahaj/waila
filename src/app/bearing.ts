@@ -9,10 +9,10 @@ export interface PairedItem {
 }
 
 export function naiveLinear(
-  dataPoints: regression.DataPoint[],
+  dataPoints: readonly regression.DataPoint[],
   _options?: regression.Options
 ): regression.Result {
-  const sorted = dataPoints.sort((a, b) => a[0] - b[0]);
+  const sorted = dataPoints.toSorted((a, b) => a[0] - b[0]);
   const min = sorted[0];
   const max = sorted[sorted.length - 1];
   const imageXDelta = max[0] - min[0];
@@ -27,13 +27,14 @@ export function naiveLinear(
 }
 
 export const leastSquaresLinear = regression.linear;
+export const polynomial = regression.polynomial;
 
 export function buildRegression(
   origin: LatLong | null,
   pairedItems: readonly PairedItem[],
   fn: typeof regression.linear,
   options?: regression.Options
-): regression.Result | null {
+): { forwards: regression.Result; reverse: regression.Result } | null {
   if (!origin) return null;
   if (pairedItems.length < 2) return null;
 
@@ -50,7 +51,10 @@ export function buildRegression(
     ];
   });
 
-  return fn(dataPoints, options);
+  return {
+    forwards: fn(dataPoints, options),
+    reverse: fn(dataPoints.map(([x, bearing]) => [bearing, x])),
+  };
 }
 
 export function addBearingsToImageItem(
