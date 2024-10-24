@@ -8,6 +8,14 @@ import { addBearingsToWorldItem, type WorldItem } from "./worldItem";
 import GeoJSON from "geojson";
 import { randomUUID } from "crypto";
 
+const averagePositionOf = (points: LatLong[]): LatLong => {
+  const degreesNorth =
+    points.reduce((acc, item) => acc + item.degreesNorth, 0) / points.length;
+  const degreesEast =
+    points.reduce((acc, item) => acc + item.degreesEast, 0) / points.length;
+  return { degreesNorth, degreesEast };
+};
+
 function WorldItemsTable({
   worldItems,
   setWorldItems,
@@ -64,6 +72,59 @@ function WorldItemsTable({
     <Grid>
       <Grid.Row>
         <Button onClick={setData}>Paste GeoJSON</Button>
+        &nbsp;
+        <Button
+          disabled={!viewerPosition}
+          style={{ width: "fit-content" }}
+          onClick={async () => {
+            const viewer: GeoJSON.Feature = {
+              type: "Feature",
+              properties: {
+                label: "Viewer",
+              },
+              id: "viewer",
+              geometry: {
+                type: "Point",
+                coordinates: [
+                  viewerPosition!.degreesEast,
+                  viewerPosition!.degreesNorth,
+                ],
+              },
+            };
+
+            const radialLines = worldItems.map(
+              (i): GeoJSON.Feature => ({
+                type: "Feature",
+                properties: {
+                  label: `line to: ${i.label}`,
+                },
+                geometry: {
+                  type: "LineString",
+                  coordinates: [
+                    [viewerPosition!.degreesEast, viewerPosition!.degreesNorth],
+                    ...[averagePositionOf(i.points)].map((latlong) => [
+                      latlong.degreesEast,
+                      latlong.degreesNorth,
+                    ]),
+                  ],
+                },
+              })
+            );
+
+            const collection: GeoJSON.FeatureCollection = {
+              type: "FeatureCollection",
+              features: [
+                viewer,
+                ...worldItems.map((i) => i.geoJsonFeature),
+                ...radialLines,
+              ],
+            };
+            const content = JSON.stringify(collection);
+            await navigator.clipboard.writeText(content);
+          }}
+        >
+          Copy as GeoJSON with radial lines
+        </Button>
       </Grid.Row>
       <Grid.Row style={{ marginTop: "1em" }}>
         <Table>
@@ -76,24 +137,21 @@ function WorldItemsTable({
           </Table.Head>
           <Table.Body>
             {sortedItems.map((worldItem) => {
-              const sortedBearings = viewerPosition
-                ? addBearingsToWorldItem(
-                    worldItem,
-                    viewerPosition
-                  ).bearings.toSorted((a, b) => a - b)
+              const bearings = viewerPosition
+                ? addBearingsToWorldItem(worldItem, viewerPosition).bearings
                 : undefined;
 
               return (
                 <Table.Row key={worldItem.id}>
                   <Table.Cell>{worldItem.id}</Table.Cell>
                   <Table.Cell>
-                    {sortedBearings && sortedBearings.length > 0 && (
+                    {bearings ? (
                       <>
-                        {sortedBearings[0].toFixed(3)}&deg; –{" "}
-                        {sortedBearings[sortedBearings.length - 1].toFixed(3)}
+                        {bearings.min.toFixed(3)}&deg; –{" "}
+                        {bearings.max.toFixed(3)}
                         &deg;
                       </>
-                    )}
+                    ) : null}
                   </Table.Cell>
                   <Table.Cell>{worldItem.label}</Table.Cell>
                 </Table.Row>

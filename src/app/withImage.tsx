@@ -1,6 +1,5 @@
 "use client";
-import { Anchor, Button } from "@zendeskgarden/react-buttons";
-import { Field, Input } from "@zendeskgarden/react-forms";
+import { Button } from "@zendeskgarden/react-buttons";
 import { Grid } from "@zendeskgarden/react-grid";
 import { useState } from "react";
 import { LatLong } from "./LatLong";
@@ -14,9 +13,9 @@ import {
   type PairedItem,
 } from "./bearing";
 import ImageItemsTable from "./imageItemsTable";
-import { Accordion } from "@zendeskgarden/react-accordions";
 import WorldItemsTable from "./worldItemsTable";
 import ViewerPosition from "./viewerPosition";
+import { Tabs } from "@zendeskgarden/react-tabs";
 
 function WithImage({
   imageSource,
@@ -51,85 +50,66 @@ function WithImage({
           <header className="App-header">
             <Grid>
               <Grid.Row justifyContent="center">
-                <Grid.Col>
-                  <ImageWithPins
-                    imageItems={imageItems}
-                    setImageItems={setImageItems}
-                    imageSource={imageSource}
-                    // viewerPosition={viewerPosition}
-                    // regressionResult={regressionResult}
-                  />
-                </Grid.Col>
+                <ImageWithPins
+                  imageItems={imageItems}
+                  setImageItems={setImageItems}
+                  imageSource={imageSource}
+                  worldItems={worldItems}
+                  regressionResult={regressionResult}
+                />
               </Grid.Row>
               <Grid.Row style={{ marginTop: "1em" }}>
-                <Grid.Col md={3}>
-                  <Accordion level={4} style={{ width: "75vw" }}>
-                    <Accordion.Section defaultValue={8}>
-                      <Accordion.Header>
-                        <Accordion.Label>Camera position</Accordion.Label>
-                      </Accordion.Header>
-                      <Accordion.Panel>
-                        <ViewerPosition
-                          viewerPosition={viewerPosition}
-                          viewerPositionSpec={viewerPositionSpec}
-                          setViewerPosition={setViewerPosition}
-                          setViewerPositionSpec={setViewerPositionSpec}
-                        />
-                      </Accordion.Panel>
-                    </Accordion.Section>
-                    <Accordion.Section defaultValue={9}>
-                      <Accordion.Header>
-                        <Accordion.Label>Image items</Accordion.Label>
-                      </Accordion.Header>
-                      <Accordion.Panel>
-                        <ImageItemsTable
-                          imageItems={imageItems}
-                          setImageItems={setImageItems}
-                          worldItems={worldItems}
-                          viewerPosition={viewerPosition}
-                          regressionResult={regressionResult}
-                        />
-                      </Accordion.Panel>
-                    </Accordion.Section>
-                    <Accordion.Section>
-                      <Accordion.Header>
-                        <Accordion.Label>World items</Accordion.Label>
-                      </Accordion.Header>
-                      <Accordion.Panel>
-                        <WorldItemsTable
-                          worldItems={worldItems}
-                          setWorldItems={setWorldItems}
-                          viewerPosition={viewerPosition}
-                          regressionResult={regressionResult}
-                        />
-                      </Accordion.Panel>
-                    </Accordion.Section>
-                    <Accordion.Section>
-                      <Accordion.Header>
-                        <Accordion.Label>Import / Export</Accordion.Label>
-                      </Accordion.Header>
-                      <Accordion.Panel>
-                        <ImportExport
-                          imageItems={imageItems}
-                          setImageItems={setImageItems}
-                          worldItems={worldItems}
-                          setWorldItems={setWorldItems}
-                          viewerPositionSpec={viewerPositionSpec}
-                          setViewerPositionSpec={setViewerPositionSpec}
-                          viewerPosition={viewerPosition}
-                          setViewerPosition={setViewerPosition}
-                        />
-                      </Accordion.Panel>
-                    </Accordion.Section>
-                  </Accordion>
-                </Grid.Col>
-              </Grid.Row>
-              <Grid.Row style={{ marginTop: "1em" }}>
-                <Grid.Col>
-                  <Button onClick={clearImage} isDanger={true}>
-                    Clear image
-                  </Button>
-                </Grid.Col>
+                <Tabs defaultValue={"viewerPosition"}>
+                  <Tabs.TabList>
+                    <Tabs.Tab item="viewerPosition">Camera position</Tabs.Tab>
+                    <Tabs.Tab item="imageItems">Image items</Tabs.Tab>
+                    <Tabs.Tab item="worldItems">World items</Tabs.Tab>
+                    <Tabs.Tab item="importExport">Import / export</Tabs.Tab>
+                    <Tabs.Tab item="options">Options</Tabs.Tab>
+                  </Tabs.TabList>
+                  <Tabs.TabPanel item="viewerPosition">
+                    <ViewerPosition
+                      viewerPosition={viewerPosition}
+                      viewerPositionSpec={viewerPositionSpec}
+                      setViewerPosition={setViewerPosition}
+                      setViewerPositionSpec={setViewerPositionSpec}
+                    />
+                  </Tabs.TabPanel>
+                  <Tabs.TabPanel item="imageItems">
+                    <ImageItemsTable
+                      imageItems={imageItems}
+                      setImageItems={setImageItems}
+                      worldItems={worldItems}
+                      viewerPosition={viewerPosition}
+                      regressionResult={regressionResult}
+                    />
+                  </Tabs.TabPanel>
+                  <Tabs.TabPanel item="worldItems">
+                    <WorldItemsTable
+                      worldItems={worldItems}
+                      setWorldItems={setWorldItems}
+                      viewerPosition={viewerPosition}
+                      regressionResult={regressionResult}
+                    />
+                  </Tabs.TabPanel>
+                  <Tabs.TabPanel item="importExport">
+                    <ImportExport
+                      imageItems={imageItems}
+                      setImageItems={setImageItems}
+                      worldItems={worldItems}
+                      setWorldItems={setWorldItems}
+                      viewerPositionSpec={viewerPositionSpec}
+                      setViewerPositionSpec={setViewerPositionSpec}
+                      viewerPosition={viewerPosition}
+                      setViewerPosition={setViewerPosition}
+                    />
+                  </Tabs.TabPanel>
+                  <Tabs.TabPanel item="options">
+                    <Button onClick={clearImage} isDanger={true}>
+                      Clear image
+                    </Button>
+                  </Tabs.TabPanel>
+                </Tabs>
               </Grid.Row>
             </Grid>
           </header>

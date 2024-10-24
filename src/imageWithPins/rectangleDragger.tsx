@@ -1,14 +1,13 @@
+import type { ImageItem, ImagePosition } from "@/app/imageItem";
 import {
   useMemo,
-  useRef,
   useState,
   type Dispatch,
+  type ReactNode,
+  type RefObject,
   type SetStateAction,
 } from "react";
-import { type ImageItem, type ImagePosition } from "./imageItem";
-import type { WorldItem } from "./worldItem";
-import regression from "regression";
-import Pins from "@/imageWithPins/pins";
+import Pins from "./pins";
 
 type RectangleDragState =
   | {
@@ -22,21 +21,17 @@ type RectangleDragState =
       endPosition: ImagePosition;
     };
 
-function ImageWithPins({
-  imageItems,
-  setImageItems,
-  imageSource,
-  worldItems,
-  regressionResult,
+function RectangleDragger({
+  imageRef,
+  onRectangle,
+  image,
+  children,
 }: {
-  imageItems: ImageItem[];
-  setImageItems: Dispatch<SetStateAction<ImageItem[]>>;
-  imageSource: string;
-  worldItems?: WorldItem[];
-  regressionResult: regression.Result | null;
+  imageRef: RefObject<HTMLImageElement>;
+  onRectangle: (rectangle: [ImagePosition, ImagePosition]) => void;
+  image: ReactNode[];
+  children?: ReactNode[];
 }) {
-  const imageRef = useRef<HTMLImageElement>(null);
-
   const [drag, setDrag] = useState<RectangleDragState>();
 
   return (
@@ -108,17 +103,10 @@ function ImageWithPins({
 
             console.log("Rectangle drag:", x, y);
 
-            const newImageItem: ImageItem = {
-              id: event.timeStamp.toString(),
-              label: `[unnamed ${new Date().toISOString()}]`,
-              rectangle: [
-                { percentX: x[0], percentY: y[0] },
-                { percentX: x[1], percentY: y[1] },
-              ],
-              linkedWorldItemId: null,
-            };
-
-            setImageItems([...imageItems, newImageItem]);
+            onRectangle([
+              { percentX: x[0], percentY: y[0] },
+              { percentX: x[1], percentY: y[1] },
+            ]);
           }
 
           setDrag(undefined);
@@ -126,19 +114,7 @@ function ImageWithPins({
         [drag]
       )}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        ref={imageRef}
-        src={imageSource}
-        className="App-logo"
-        alt="provided image"
-        // onDoubleClick={imageClick}
-        style={{
-          minWidth: "fit-content",
-          minHeight: "fit-content",
-        }}
-        draggable={false}
-      />
+      {image}
 
       {drag?.state === "dragging" &&
         (() => {
@@ -175,13 +151,9 @@ function ImageWithPins({
           );
         })()}
 
-      <Pins
-        imageItems={imageItems}
-        worldItems={worldItems}
-        imageRef={imageRef}
-      />
+      {children}
     </div>
   );
 }
 
-export default ImageWithPins;
+export default RectangleDragger;

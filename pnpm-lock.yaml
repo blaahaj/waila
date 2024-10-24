@@ -32,6 +32,9 @@ importers:
       '@zendeskgarden/react-tables':
         specifier: ^9.0.0
         version: 9.0.0(@zendeskgarden/react-theming@9.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@5.3.11(@babel/core@7.25.8)(react-dom@18.3.1(react@18.3.1))(react-is@18.2.0)(react@18.3.1)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@5.3.11(@babel/core@7.25.8)(react-dom@18.3.1(react@18.3.1))(react-is@18.2.0)(react@18.3.1))
+      '@zendeskgarden/react-tabs':
+        specifier: ^9.0.0
+        version: 9.0.0(@zendeskgarden/react-theming@9.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@5.3.11(@babel/core@7.25.8)(react-dom@18.3.1(react@18.3.1))(react-is@18.2.0)(react@18.3.1)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@5.3.11(@babel/core@7.25.8)(react-dom@18.3.1(react@18.3.1))(react-is@18.2.0)(react@18.3.1))
       '@zendeskgarden/react-theming':
         specifier: ^9.0.0
         version: 9.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@5.3.11(@babel/core@7.25.8)(react-dom@18.3.1(react@18.3.1))(react-is@18.2.0)(react@18.3.1))
@@ -502,6 +505,13 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
 
+  '@zendeskgarden/container-tabs@2.0.14':
+    resolution: {integrity: sha512-stULc4MR6IvKhrLPE9H3zWLv4Kyz1M9qFJAOscJ/GD52kKQmuxdCF5fCWOfX4sqaq+FCUWU8Exw3hsXxcqXUvw==}
+    peerDependencies:
+      prop-types: ^15.6.1
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+
   '@zendeskgarden/container-tooltip@1.0.20':
     resolution: {integrity: sha512-D1cC531nglG7e2wrU5q1c4eO7JGb/9FciOsEsZZOdU+84u7E2aGBTWTD1F+6lFZ2Ns9kj78FBCEU4Pxg3vIwiw==}
     peerDependencies:
@@ -573,6 +583,14 @@ packages:
 
   '@zendeskgarden/react-tables@9.0.0':
     resolution: {integrity: sha512-NJnXv+iFZ7DN7OZvIigDS2AnD9tQ9fjESNJ4U4YpYT5wBtBcKxYdvZEvy2dx79lExt1CvArOI2qxNtVLBqkPsg==}
+    peerDependencies:
+      '@zendeskgarden/react-theming': '>=9.0.0-next'
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+      styled-components: ^5.3.1
+
+  '@zendeskgarden/react-tabs@9.0.0':
+    resolution: {integrity: sha512-WoRmB74GOEe6cG2wuB6cB2d5dEr1Fbltgb318GhiBgR/0xwbKuHwWOzN4p9mrpHCHl0ZlUggDR/12Iwf6LYggg==}
     peerDependencies:
       '@zendeskgarden/react-theming': '>=9.0.0-next'
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -2513,6 +2531,15 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
+  '@zendeskgarden/container-tabs@2.0.14(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@babel/runtime': 7.25.7
+      '@zendeskgarden/container-selection': 3.1.2(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@zendeskgarden/container-utilities': 2.0.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      prop-types: 15.8.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
   '@zendeskgarden/container-tooltip@1.0.20(@types/react@18.3.11)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.25.7
@@ -2642,6 +2669,18 @@ snapshots:
       prop-types: 15.8.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
+      styled-components: 5.3.11(@babel/core@7.25.8)(react-dom@18.3.1(react@18.3.1))(react-is@18.2.0)(react@18.3.1)
+
+  '@zendeskgarden/react-tabs@9.0.0(@zendeskgarden/react-theming@9.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@5.3.11(@babel/core@7.25.8)(react-dom@18.3.1(react@18.3.1))(react-is@18.2.0)(react@18.3.1)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@5.3.11(@babel/core@7.25.8)(react-dom@18.3.1(react@18.3.1))(react-is@18.2.0)(react@18.3.1))':
+    dependencies:
+      '@zendeskgarden/container-tabs': 2.0.14(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@zendeskgarden/container-utilities': 2.0.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@zendeskgarden/react-theming': 9.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@5.3.11(@babel/core@7.25.8)(react-dom@18.3.1(react@18.3.1))(react-is@18.2.0)(react@18.3.1))
+      polished: 4.3.1
+      prop-types: 15.8.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-merge-refs: 2.1.1
       styled-components: 5.3.11(@babel/core@7.25.8)(react-dom@18.3.1(react@18.3.1))(react-is@18.2.0)(react@18.3.1)
 
   '@zendeskgarden/react-tags@9.0.0(@zendeskgarden/react-theming@9.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@5.3.11(@babel/core@7.25.8)(react-dom@18.3.1(react@18.3.1))(react-is@18.2.0)(react@18.3.1)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@5.3.11(@babel/core@7.25.8)(react-dom@18.3.1(react@18.3.1))(react-is@18.2.0)(react@18.3.1))':

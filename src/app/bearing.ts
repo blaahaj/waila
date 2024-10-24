@@ -41,29 +41,32 @@ export function buildRegression(
     const imagePercentX = pair.imageItem.rectangle
       .map((p) => p.percentX)
       .sort() as [number, number];
-    const bearings = addBearingsToWorldItem(
-      pair.worldItem,
-      origin
-    ).bearings.sort((a, b) => a - b);
+
+    const bearings = addBearingsToWorldItem(pair.worldItem, origin).bearings;
 
     return [
-      [imagePercentX[0], bearings[0]],
-      [imagePercentX[1], bearings[bearings.length - 1]],
+      [imagePercentX[0], bearings.min],
+      [imagePercentX[1], bearings.max],
     ];
   });
 
   return fn(dataPoints, options);
 }
 
-export function addBearingToImageItem(
+export function addBearingsToImageItem(
   imageItem: ImageItem,
   regressionResult: regression.Result
-): ImageItem & { bearing: [number, number] } {
+): ImageItem & { bearings: { min: number; max: number } } {
+  const all = imageItem.rectangle.map(
+    (corner) => regressionResult.predict(corner.percentX)[1]
+  );
+  const sorted = all.toSorted((a, b) => a - b);
+
   return {
     ...imageItem,
-    bearing: [
-      regressionResult.predict(imageItem.rectangle[0].percentX)[1],
-      regressionResult.predict(imageItem.rectangle[1].percentX)[1],
-    ],
+    bearings: {
+      min: sorted[0],
+      max: sorted[1],
+    },
   };
 }

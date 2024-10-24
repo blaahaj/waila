@@ -7,9 +7,10 @@ import { useState, type Dispatch, type SetStateAction } from "react";
 import { addBearingsToWorldItem, type WorldItem } from "./worldItem";
 import regression from "regression";
 import type { LatLong } from "./LatLong";
-import { addBearingToImageItem } from "./bearing";
+import { addBearingsToImageItem } from "./bearing";
 import { geoJsonUrl } from "./geoJson";
 import { logRender } from "./logRender";
+import { Table } from "@zendeskgarden/react-tables";
 
 function ImageItemTableRow({
   imageItem,
@@ -28,66 +29,84 @@ function ImageItemTableRow({
 }) {
   const [expanded, setExpanded] = useState(false);
 
-  const bearingRange = regressionResult
-    ? (addBearingToImageItem(
-        imageItem,
-        regressionResult
-      ).bearing.toSorted() as [number, number])
+  const predictedBearings = regressionResult
+    ? addBearingsToImageItem(imageItem, regressionResult).bearings
     : null;
 
   const worldItem = worldItems.find(
     (wi) => wi.id === imageItem.linkedWorldItemId
   );
 
-  const sortedWorldItemBearings =
+  const actualBearings =
     viewerPosition && worldItem
-      ? addBearingsToWorldItem(worldItem, viewerPosition).bearings.toSorted(
-          (a, b) => a - b
-        )
-      : undefined;
+      ? addBearingsToWorldItem(worldItem, viewerPosition).bearings
+      : null;
 
   return (
-    <Grid.Row key={imageItem.id} style={{ marginBottom: "0.5em" }}>
-      <Grid.Col size={1}>
-        {imageItem.rectangle[0].percentX.toFixed(3)}%
-      </Grid.Col>
-      <Grid.Col size={1}>
-        {imageItem.rectangle[1].percentX.toFixed(3)}%
-      </Grid.Col>
-      <Grid.Col>
-        {sortedWorldItemBearings ? (
-          <>{sortedWorldItemBearings[0].toFixed(3)}&deg;</>
-        ) : bearingRange ? (
-          <>{bearingRange[0].toFixed(3)}&deg;</>
-        ) : (
-          ""
-        )}
-      </Grid.Col>
-      <Grid.Col>
-        {sortedWorldItemBearings ? (
-          <>
-            {sortedWorldItemBearings[
-              sortedWorldItemBearings.length - 1
-            ].toFixed(3)}
-            &deg;
-          </>
-        ) : bearingRange ? (
-          <>{bearingRange[1].toFixed(3)}&deg;</>
-        ) : (
-          ""
-        )}
-      </Grid.Col>
-      <Grid.Col>
-        {viewerPosition && bearingRange && (
+    <Table.Row key={imageItem.id} style={{ marginBottom: "0.5em" }}>
+      <Table.Cell>{imageItem.rectangle[0].percentX.toFixed(3)}%</Table.Cell>
+      <Table.Cell>{imageItem.rectangle[1].percentX.toFixed(3)}%</Table.Cell>
+
+      {(["min", "max"] as const).map((minOrMax) => (
+        <Table.Cell key={minOrMax}>
+          {predictedBearings && (
+            <div>p:{predictedBearings[minOrMax].toFixed(3)}&deg;</div>
+          )}
+          {/* {actualBearings && (
+            <div>a:{actualBearings[minOrMax].toFixed(3)}&deg;</div>
+          )} */}
+          {actualBearings && predictedBearings && (
+            <div>
+              a:
+              {actualBearings[minOrMax] >= predictedBearings[minOrMax]
+                ? "+"
+                : "-"}
+              {Math.abs(
+                actualBearings[minOrMax] - predictedBearings[minOrMax]
+              ).toFixed(3)}
+              &deg;
+            </div>
+          )}
+
+          {/* {actualBearings ? (
+            <>
+              p:{actualBearings[minOrMax].toFixed(3)}&deg;
+              {predictedBearings && (
+                <>
+                  {" "}
+                  (p=
+                  {predictedBearings[minOrMax] >= actualBearings[minOrMax]
+                    ? "+"
+                    : "-"}
+                  {Math.abs(
+                    predictedBearings[minOrMax] - actualBearings[minOrMax]
+                  ).toFixed(3)}
+                  &deg;)
+                </>
+              )}
+            </>
+          ) : predictedBearings ? (
+            <>p:{predictedBearings[minOrMax].toFixed(3)}&deg;</>
+          ) : (
+            <></>
+          )} */}
+        </Table.Cell>
+      ))}
+
+      <Table.Cell>
+        {viewerPosition && predictedBearings && (
           <Anchor
             isExternal={true}
-            href={geoJsonUrl(viewerPosition, bearingRange)}
+            href={geoJsonUrl(viewerPosition, [
+              predictedBearings.min,
+              predictedBearings.max,
+            ])}
           >
             Show in GeoJSON
           </Anchor>
         )}
-      </Grid.Col>
-      <Grid.Col size={4}>
+      </Table.Cell>
+      <Table.Cell>
         <Input
           value={imageItem.label}
           onChange={(event) =>
@@ -102,10 +121,11 @@ function ImageItemTableRow({
           size={20}
           width={"10em"}
         />
-      </Grid.Col>
-      <Grid.Col>
+      </Table.Cell>
+      <Table.Cell>
         <DField>
           <Combobox
+            style={{ width: "20em" }}
             isEditable={false}
             inputValue={imageItem.linkedWorldItemId ?? ""}
             renderValue={() =>
@@ -136,8 +156,8 @@ function ImageItemTableRow({
             {expanded && expandedChildren(imageItem)}
           </Combobox>
         </DField>
-      </Grid.Col>
-      <Grid.Col>
+      </Table.Cell>
+      <Table.Cell>
         <Button
           onClick={() =>
             setImageItems((imageItems) =>
@@ -148,8 +168,8 @@ function ImageItemTableRow({
         >
           Remove
         </Button>
-      </Grid.Col>
-    </Grid.Row>
+      </Table.Cell>
+    </Table.Row>
   );
 }
 

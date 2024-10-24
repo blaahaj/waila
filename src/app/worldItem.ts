@@ -10,7 +10,7 @@ export type WorldItem = {
 export function addBearingsToWorldItem(
   worldItem: WorldItem,
   origin: LatLong
-): WorldItem & { bearings: number[] } {
+): WorldItem & { bearings: { all: number[]; min: number; max: number } } {
   const latlongToBearing = (latlong: LatLong): number =>
     90 -
     (Math.atan2(
@@ -20,8 +20,15 @@ export function addBearingsToWorldItem(
       Math.PI) *
       180;
 
+  const bearings = worldItem.points.map(latlongToBearing);
+  const sorted = bearings.toSorted((a, b) => a - b);
+
   return {
     ...worldItem,
-    bearings: worldItem.points.map(latlongToBearing),
+    bearings: {
+      all: bearings,
+      min: sorted[0],
+      max: sorted[sorted.length - 1],
+    },
   };
 }

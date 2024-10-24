@@ -4,8 +4,9 @@ import { LatLong } from "./LatLong";
 import { useMemo, type Dispatch, type SetStateAction } from "react";
 import { type ImageItem } from "./imageItem";
 import regression from "regression";
-import type { WorldItem } from "./worldItem";
+import { addBearingsToWorldItem, type WorldItem } from "./worldItem";
 import ImageItemTableRow from "./imageItemTableRow";
+import { Table } from "@zendeskgarden/react-tables";
 
 function ImageItemsTable({
   imageItems,
@@ -20,6 +21,13 @@ function ImageItemsTable({
   viewerPosition: LatLong | null;
   regressionResult: regression.Result | null;
 }) {
+  if (viewerPosition) {
+    const withBearings = worldItems
+      .map((item) => addBearingsToWorldItem(item, viewerPosition))
+      .sort((a, b) => a.bearings.min - b.bearings.min);
+    worldItems = withBearings;
+  }
+
   const expandedChildren = useMemo(
     () => (excludedItem: ImageItem) =>
       (
@@ -36,30 +44,48 @@ function ImageItemsTable({
                   imageItem !== excludedItem
               )}
             >
+              {"bearings" in worldItem ? (
+                <>
+                  {(worldItem.bearings as { min: number }).min.toFixed(3)}&deg;{" "}
+                </>
+              ) : null}
               {worldItem.label}
             </Option>
           ))}
         </>
       ),
-    [imageItems, worldItems]
+    [viewerPosition, imageItems, worldItems, new Date().getTime()]
   );
 
   return (
-    <Grid>
-      {imageItems.map((imageItem) => {
-        return (
-          <ImageItemTableRow
-            key={imageItem.id}
-            imageItem={imageItem}
-            setImageItems={setImageItems}
-            worldItems={worldItems}
-            expandedChildren={expandedChildren}
-            viewerPosition={viewerPosition}
-            regressionResult={regressionResult ?? null}
-          />
-        );
-      })}
-    </Grid>
+    <Table>
+      <Table.Head>
+        <Table.HeaderCell>min x%</Table.HeaderCell>
+        <Table.HeaderCell>max x%</Table.HeaderCell>
+        <Table.HeaderCell>min bearing</Table.HeaderCell>
+        <Table.HeaderCell>max bearing</Table.HeaderCell>
+        <Table.HeaderCell>GeoJSON</Table.HeaderCell>
+        <Table.HeaderCell>Label</Table.HeaderCell>
+        <Table.HeaderCell>Linked world item</Table.HeaderCell>
+      </Table.Head>
+      <Table.Body>
+        {imageItems
+          .sort((a, b) => a.rectangle[0].percentX - b.rectangle[0].percentX)
+          .map((imageItem) => {
+            return (
+              <ImageItemTableRow
+                key={imageItem.id}
+                imageItem={imageItem}
+                setImageItems={setImageItems}
+                worldItems={worldItems}
+                expandedChildren={expandedChildren}
+                viewerPosition={viewerPosition}
+                regressionResult={regressionResult ?? null}
+              />
+            );
+          })}
+      </Table.Body>
+    </Table>
   );
 }
 
