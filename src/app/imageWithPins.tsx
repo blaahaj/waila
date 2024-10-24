@@ -10,6 +10,7 @@ import type { WorldItem } from "./worldItem";
 import regression from "regression";
 import Pins from "@/imageWithPins/pins";
 import type { LatLong } from "./LatLong";
+import type { PairOfRegressions } from "./bearing";
 
 type RectangleDragState =
   | {
@@ -28,14 +29,14 @@ function ImageWithPins({
   setImageItems,
   imageSource,
   worldItems,
-  reverseRegressionResult,
+  pairOfRegressions,
   viewerPosition,
 }: {
   imageItems: ImageItem[];
   setImageItems: Dispatch<SetStateAction<ImageItem[]>>;
   imageSource: string;
   worldItems?: WorldItem[];
-  reverseRegressionResult: regression.Result | null;
+  pairOfRegressions: PairOfRegressions | null;
   viewerPosition: LatLong | null;
 }) {
   const imageRef = useRef<HTMLImageElement>(null);
@@ -125,11 +126,9 @@ function ImageWithPins({
               (a, b) => a - b
             );
 
-            console.log("Rectangle drag:", x, y);
-
             const newImageItem: ImageItem = {
               id: event.timeStamp.toString(),
-              label: `[unnamed ${new Date().toISOString()}]`,
+              label: `${Math.floor(Math.random() * 10000)} unnamed`,
               rectangle: [
                 { percentX: x[0], percentY: y[0] },
                 { percentX: x[1], percentY: y[1] },
@@ -199,7 +198,7 @@ function ImageWithPins({
         worldItems={worldItems}
         imageRef={imageRef}
         showPredictedPositions={showPredictedPositions}
-        reverseRegressionResult={reverseRegressionResult}
+        pairOfRegressions={pairOfRegressions}
         viewerPosition={viewerPosition}
       />
     </div>

@@ -7,19 +7,20 @@ import regression from "regression";
 import { addBearingsToWorldItem, type WorldItem } from "./worldItem";
 import ImageItemTableRow from "./imageItemTableRow";
 import { Table } from "@zendeskgarden/react-tables";
+import type { PairOfRegressions } from "./bearing";
 
 function ImageItemsTable({
   imageItems,
   setImageItems,
   worldItems,
   viewerPosition,
-  regressionResult,
+  pairOfRegressions,
 }: {
   imageItems: ImageItem[];
   setImageItems: Dispatch<SetStateAction<ImageItem[]>>;
   worldItems: WorldItem[];
   viewerPosition: LatLong | null;
-  regressionResult: regression.Result | null;
+  pairOfRegressions: PairOfRegressions | null;
 }) {
   if (viewerPosition) {
     const withBearings = worldItems
@@ -82,7 +83,7 @@ function ImageItemsTable({
                 worldItems={worldItems}
                 expandedChildren={expandedChildren}
                 viewerPosition={viewerPosition}
-                regressionResult={regressionResult ?? null}
+                pairOfRegressions={pairOfRegressions}
               />
             );
           })}

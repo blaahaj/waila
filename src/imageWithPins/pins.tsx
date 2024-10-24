@@ -1,3 +1,4 @@
+import type { PairOfRegressions } from "@/app/bearing";
 import type { ImageItem } from "@/app/imageItem";
 import type { LatLong } from "@/app/LatLong";
 import ViewerPosition from "@/app/viewerPosition";
@@ -10,14 +11,14 @@ function Pins({
   worldItems,
   imageRef,
   showPredictedPositions,
-  reverseRegressionResult,
+  pairOfRegressions,
   viewerPosition,
 }: {
   imageItems: ImageItem[];
   worldItems: WorldItem[] | undefined;
   imageRef: RefObject<HTMLImageElement>;
   showPredictedPositions: boolean;
-  reverseRegressionResult: regression.Result | null;
+  pairOfRegressions: PairOfRegressions | null;
   viewerPosition: LatLong | null;
 }) {
   return (
@@ -26,6 +27,7 @@ function Pins({
         const worldItem = worldItems?.find(
           (w) => w.id === pin.linkedWorldItemId
         );
+        // if (!worldItem) return null;
 
         const worldItemWithBearings =
           worldItem && viewerPosition
@@ -81,7 +83,7 @@ function Pins({
           </div>,
           ...(showPredictedPositions &&
           worldItemWithBearings &&
-          reverseRegressionResult
+          pairOfRegressions
             ? [
                 <div
                   key={"predicted-" + pin.id}
@@ -89,7 +91,7 @@ function Pins({
                     position: "absolute",
                     left: `${
                       (imageRef.current!.offsetWidth *
-                        reverseRegressionResult!.predict(
+                        pairOfRegressions!.bearingToImagePercentX.result.predict(
                           worldItemWithBearings.bearings.min
                         )[1]) /
                         100 +
@@ -102,10 +104,10 @@ function Pins({
                       imageRef.current!.offsetTop
                     }px`,
                     width: `${
-                      ((reverseRegressionResult!.predict(
+                      ((pairOfRegressions!.bearingToImagePercentX.result.predict(
                         worldItemWithBearings.bearings.max
                       )[1] -
-                        reverseRegressionResult!.predict(
+                        pairOfRegressions!.bearingToImagePercentX.result.predict(
                           worldItemWithBearings.bearings.min
                         )[1]) /
                         100) *

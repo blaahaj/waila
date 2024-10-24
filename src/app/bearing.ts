@@ -29,16 +29,23 @@ export function naiveLinear(
 export const leastSquaresLinear = regression.linear;
 export const polynomial = regression.polynomial;
 
+export type PairOfRegressions = {
+  imagePercentXToBearing: {
+    inputData: readonly [number, number][];
+    result: regression.Result;
+  };
+  bearingToImagePercentX: {
+    inputData: readonly [number, number][];
+    result: regression.Result;
+  };
+};
+
 export function buildRegression(
   origin: LatLong | null,
   pairedItems: readonly PairedItem[],
   fn: typeof regression.linear,
   options?: regression.Options
-): {
-  forwards: regression.Result;
-  reverse: regression.Result;
-  dataPoints: readonly [number, number][];
-} | null {
+): PairOfRegressions | null {
   if (!origin) return null;
   if (pairedItems.length < 2) return null;
 
@@ -55,19 +62,31 @@ export function buildRegression(
     ];
   });
 
+  const flippedDataPoints: regression.DataPoint[] = dataPoints.map(
+    ([x, bearing]) => [bearing, x]
+  );
+
   return {
-    forwards: fn(dataPoints, options),
-    reverse: fn(dataPoints.map(([x, bearing]) => [bearing, x])),
-    dataPoints,
+    imagePercentXToBearing: {
+      inputData: dataPoints,
+      result: fn(dataPoints, options),
+    },
+    bearingToImagePercentX: {
+      inputData: flippedDataPoints,
+      result: fn(flippedDataPoints, options),
+    },
   };
 }
 
 export function addBearingsToImageItem(
   imageItem: ImageItem,
-  regressionResult: regression.Result
+  pairOfRegressions: PairOfRegressions
 ): ImageItem & { bearings: { min: number; max: number } } {
   const all = imageItem.rectangle.map(
-    (corner) => regressionResult.predict(corner.percentX)[1]
+    (corner) =>
+      pairOfRegressions.imagePercentXToBearing.result.predict(
+        corner.percentX
+      )[1]
   );
   const sorted = all.toSorted((a, b) => a - b);
 

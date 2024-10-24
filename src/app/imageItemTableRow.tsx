@@ -7,7 +7,7 @@ import { useState, type Dispatch, type SetStateAction } from "react";
 import { addBearingsToWorldItem, type WorldItem } from "./worldItem";
 import regression from "regression";
 import type { LatLong } from "./LatLong";
-import { addBearingsToImageItem } from "./bearing";
+import { addBearingsToImageItem, type PairOfRegressions } from "./bearing";
 import { geoJsonUrl } from "./geoJson";
 import { logRender } from "./logRender";
 import { Table } from "@zendeskgarden/react-tables";
@@ -18,19 +18,19 @@ function ImageItemTableRow({
   worldItems,
   expandedChildren,
   viewerPosition,
-  regressionResult,
+  pairOfRegressions,
 }: {
   imageItem: ImageItem;
   setImageItems: Dispatch<SetStateAction<ImageItem[]>>;
   worldItems: WorldItem[];
   expandedChildren: (excludeImageItem: ImageItem) => React.ReactNode;
   viewerPosition: LatLong | null;
-  regressionResult: regression.Result | null;
+  pairOfRegressions: PairOfRegressions | null;
 }) {
   const [expanded, setExpanded] = useState(false);
 
-  const predictedBearings = regressionResult
-    ? addBearingsToImageItem(imageItem, regressionResult).bearings
+  const predictedBearings = pairOfRegressions
+    ? addBearingsToImageItem(imageItem, pairOfRegressions).bearings
     : null;
 
   const worldItem = worldItems.find(
@@ -44,8 +44,12 @@ function ImageItemTableRow({
 
   return (
     <Table.Row key={imageItem.id} style={{ marginBottom: "0.5em" }}>
-      <Table.Cell>{imageItem.rectangle[0].percentX.toFixed(3)}%</Table.Cell>
-      <Table.Cell>{imageItem.rectangle[1].percentX.toFixed(3)}%</Table.Cell>
+      <Table.Cell style={{ width: "4em" }}>
+        {imageItem.rectangle[0].percentX.toFixed(3)}%
+      </Table.Cell>
+      <Table.Cell style={{ width: "4em" }}>
+        {imageItem.rectangle[1].percentX.toFixed(3)}%
+      </Table.Cell>
 
       {(["min", "max"] as const).map((minOrMax) => (
         <Table.Cell key={minOrMax}>
@@ -67,29 +71,6 @@ function ImageItemTableRow({
               &deg;
             </div>
           )}
-
-          {/* {actualBearings ? (
-            <>
-              p:{actualBearings[minOrMax].toFixed(3)}&deg;
-              {predictedBearings && (
-                <>
-                  {" "}
-                  (p=
-                  {predictedBearings[minOrMax] >= actualBearings[minOrMax]
-                    ? "+"
-                    : "-"}
-                  {Math.abs(
-                    predictedBearings[minOrMax] - actualBearings[minOrMax]
-                  ).toFixed(3)}
-                  &deg;)
-                </>
-              )}
-            </>
-          ) : predictedBearings ? (
-            <>p:{predictedBearings[minOrMax].toFixed(3)}&deg;</>
-          ) : (
-            <></>
-          )} */}
         </Table.Cell>
       ))}
 
@@ -102,7 +83,7 @@ function ImageItemTableRow({
               predictedBearings.max,
             ])}
           >
-            Show in GeoJSON
+            Find...
           </Anchor>
         )}
       </Table.Cell>
@@ -125,7 +106,8 @@ function ImageItemTableRow({
       <Table.Cell>
         <DField>
           <Combobox
-            style={{ width: "20em" }}
+            isExpanded={expanded}
+            style={{ width: expanded ? "20em" : undefined }}
             isEditable={false}
             inputValue={imageItem.linkedWorldItemId ?? ""}
             renderValue={() =>

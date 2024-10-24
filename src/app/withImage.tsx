@@ -19,6 +19,7 @@ import ViewerPosition from "./viewerPosition";
 import { Tabs } from "@zendeskgarden/react-tabs";
 import { polynomial } from "regression";
 import RegressionGraph from "./RegressionGraph";
+import RegressionGraph2 from "./RegressionGraph2";
 
 function WithImage({
   imageSource,
@@ -39,12 +40,14 @@ function WithImage({
     }))
     .filter((pair): pair is PairedItem => !!pair.worldItem);
 
-  const regressionResult = buildRegression(
+  const pairOfRegressions = buildRegression(
     viewerPosition,
     pairedItems,
-    leastSquaresLinear,
-    { precision: 10, order: 3 }
+    polynomial,
+    { precision: 10, order: 2 }
   );
+
+  const [activeTab, setActiveTab] = useState("viewerPosition");
 
   return (
     <div className="p-8 pb-20 font-[family-name:var(--font-geist-sans)]">
@@ -58,67 +61,95 @@ function WithImage({
                   setImageItems={setImageItems}
                   imageSource={imageSource}
                   worldItems={worldItems}
-                  reverseRegressionResult={regressionResult?.reverse ?? null}
+                  pairOfRegressions={pairOfRegressions}
                   viewerPosition={viewerPosition}
                 />
               </Grid.Row>
               <Grid.Row style={{ marginTop: "1em" }}>
-                <Tabs defaultValue={"viewerPosition"}>
+                <Tabs
+                  selectedItem={activeTab}
+                  onChange={(e) => setActiveTab(e)}
+                >
                   <Tabs.TabList>
                     <Tabs.Tab item="viewerPosition">Camera position</Tabs.Tab>
                     <Tabs.Tab item="imageItems">Image items</Tabs.Tab>
                     <Tabs.Tab item="worldItems">World items</Tabs.Tab>
                     <Tabs.Tab item="regression">Regression</Tabs.Tab>
-                    <Tabs.Tab item="importExport">Import / export</Tabs.Tab>
-                    <Tabs.Tab item="options">Options</Tabs.Tab>
+                    {/* <Tabs.Tab item="regression 2">Regression 2</Tabs.Tab> */}
+                    <Tabs.Tab item="importExport">Import / Export</Tabs.Tab>
+                    <Tabs.Tab item="reset">Reset</Tabs.Tab>
                   </Tabs.TabList>
                   <Tabs.TabPanel item="viewerPosition">
-                    <ViewerPosition
-                      viewerPosition={viewerPosition}
-                      viewerPositionSpec={viewerPositionSpec}
-                      setViewerPosition={setViewerPosition}
-                      setViewerPositionSpec={setViewerPositionSpec}
-                    />
-                  </Tabs.TabPanel>
-                  <Tabs.TabPanel item="imageItems">
-                    <ImageItemsTable
-                      imageItems={imageItems}
-                      setImageItems={setImageItems}
-                      worldItems={worldItems}
-                      viewerPosition={viewerPosition}
-                      regressionResult={regressionResult?.forwards ?? null}
-                    />
-                  </Tabs.TabPanel>
-                  <Tabs.TabPanel item="worldItems">
-                    <WorldItemsTable
-                      worldItems={worldItems}
-                      setWorldItems={setWorldItems}
-                      viewerPosition={viewerPosition}
-                    />
-                  </Tabs.TabPanel>
-                  <Tabs.TabPanel item="regression">
-                    {regressionResult ? (
-                      <RegressionGraph
-                        regressionResult={regressionResult.forwards}
-                        dataPoints={regressionResult.dataPoints}
+                    {activeTab === "viewerPosition" && (
+                      <ViewerPosition
+                        viewerPosition={viewerPosition}
+                        viewerPositionSpec={viewerPositionSpec}
+                        setViewerPosition={setViewerPosition}
+                        setViewerPositionSpec={setViewerPositionSpec}
                       />
-                    ) : (
-                      "Not enough data yet"
                     )}
                   </Tabs.TabPanel>
-                  <Tabs.TabPanel item="importExport">
-                    <ImportExport
-                      imageItems={imageItems}
-                      setImageItems={setImageItems}
-                      worldItems={worldItems}
-                      setWorldItems={setWorldItems}
-                      viewerPositionSpec={viewerPositionSpec}
-                      setViewerPositionSpec={setViewerPositionSpec}
-                      viewerPosition={viewerPosition}
-                      setViewerPosition={setViewerPosition}
-                    />
+                  <Tabs.TabPanel item="imageItems">
+                    {activeTab === "imageItems" && (
+                      <ImageItemsTable
+                        imageItems={imageItems}
+                        setImageItems={setImageItems}
+                        worldItems={worldItems}
+                        viewerPosition={viewerPosition}
+                        pairOfRegressions={pairOfRegressions}
+                      />
+                    )}
                   </Tabs.TabPanel>
-                  <Tabs.TabPanel item="options">
+                  <Tabs.TabPanel item="worldItems">
+                    {activeTab === "worldItems" && (
+                      <WorldItemsTable
+                        worldItems={worldItems}
+                        setWorldItems={setWorldItems}
+                        viewerPosition={viewerPosition}
+                      />
+                    )}
+                  </Tabs.TabPanel>
+                  <Tabs.TabPanel item="regression">
+                    {activeTab === "regression" && (
+                      <>
+                        {pairOfRegressions ? (
+                          <RegressionGraph
+                            pairOfRegressions={pairOfRegressions}
+                          />
+                        ) : (
+                          "Not enough data yet"
+                        )}
+                      </>
+                    )}
+                  </Tabs.TabPanel>
+                  {/* <Tabs.TabPanel item="regression 2">
+                    {activeTab === "regression 2" && (
+                      <>
+                        {pairOfRegressions ? (
+                          <RegressionGraph2
+                            pairOfRegressions={pairOfRegressions}
+                          />
+                        ) : (
+                          "Not enough data yet"
+                        )}
+                      </>
+                    )}
+                  </Tabs.TabPanel> */}
+                  <Tabs.TabPanel item="importExport">
+                    {activeTab === "importExport" && (
+                      <ImportExport
+                        imageItems={imageItems}
+                        setImageItems={setImageItems}
+                        worldItems={worldItems}
+                        setWorldItems={setWorldItems}
+                        viewerPositionSpec={viewerPositionSpec}
+                        setViewerPositionSpec={setViewerPositionSpec}
+                        viewerPosition={viewerPosition}
+                        setViewerPosition={setViewerPosition}
+                      />
+                    )}
+                  </Tabs.TabPanel>
+                  <Tabs.TabPanel item="reset">
                     <Button onClick={clearImage} isDanger={true}>
                       Clear image
                     </Button>

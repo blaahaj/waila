@@ -1,14 +1,27 @@
 import type { Result } from "regression";
+import type { PairOfRegressions } from "./bearing";
+
+function* steppedRange(
+  start: number,
+  end: number,
+  step: number
+): Generator<number> {
+  let n = start;
+  while (n <= end) {
+    yield n;
+    n += step;
+  }
+}
 
 function RegressionGraph({
-  regressionResult,
-  dataPoints,
+  pairOfRegressions,
 }: {
-  regressionResult: Result;
-  dataPoints: readonly [number, number][];
+  pairOfRegressions: PairOfRegressions;
 }) {
-  const predictedBearingAtX0 = regressionResult.predict(0)[1];
-  const predictedBearingAtX100 = regressionResult.predict(100)[1];
+  const predictedBearingAtX0 =
+    pairOfRegressions.imagePercentXToBearing.result.predict(0)[1];
+  const predictedBearingAtX100 =
+    pairOfRegressions.imagePercentXToBearing.result.predict(100)[1];
 
   const imagePercentToSvgX = (percentX: number) => (percentX / 100) * 400;
 
@@ -111,7 +124,7 @@ function RegressionGraph({
           />
         ))}
 
-        {dataPoints.map((point) => (
+        {pairOfRegressions.imagePercentXToBearing.inputData.map((point) => (
           <circle
             cx={imagePercentToSvgX(point[0])}
             cy={bearingToSvgY(point[1])}
@@ -120,13 +133,31 @@ function RegressionGraph({
           />
         ))}
 
-        <line
+        {/* <line
           x1={imagePercentToSvgX(0)}
           x2={imagePercentToSvgX(100)}
           y1={bearingToSvgY(predictedBearingAtX0)}
           y2={bearingToSvgY(predictedBearingAtX100)}
           strokeWidth={"0.2"}
           stroke="blue"
+        /> */}
+
+        <path
+          d={(() => {
+            const bits: string[] = [];
+            for (let percentX = 0; percentX <= 100; percentX += 1) {
+              const [x, y] =
+                pairOfRegressions.imagePercentXToBearing.result.predict(
+                  percentX
+                );
+              const op = bits.length === 0 ? "M" : "L";
+              bits.push(`${op}${imagePercentToSvgX(x)},${bearingToSvgY(y)}`);
+            }
+            return bits.join(" ");
+          })()}
+          strokeWidth={"0.5"}
+          stroke="lime"
+          fill="none"
         />
       </g>
     </svg>

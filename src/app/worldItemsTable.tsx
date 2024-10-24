@@ -58,7 +58,38 @@ function WorldItemsTable({
       } else {
         setWorldItems([]);
       }
-      data.type;
+    },
+    [setWorldItems]
+  );
+
+  const addAnItem = useMemo(
+    () => () => {
+      const json = window.prompt("GeoJSON:");
+      if (!json) return;
+
+      const data = JSON.parse(json) as GeoJSON.GeoJSON;
+
+      if (data.type === "Feature" && data.geometry.type === "Polygon") {
+        data.properties ||= {};
+        data.properties.id ||= randomUUID().toLocaleLowerCase();
+        data.properties.label ||= "[unnamed]";
+
+        const newItem: WorldItem = {
+          id: data.properties.id,
+          label: data.properties.label,
+          points: data.geometry.coordinates
+            .flat(1)
+            .map((c) => ({ degreesEast: c[0], degreesNorth: c[1] })),
+          geoJsonFeature: data,
+        };
+
+        setWorldItems((worldItems) => [
+          ...worldItems.filter((i) => i.id !== newItem.id),
+          newItem,
+        ]);
+      } else {
+        return worldItems;
+      }
     },
     [setWorldItems]
   );
@@ -71,7 +102,9 @@ function WorldItemsTable({
   return (
     <Grid>
       <Grid.Row>
-        <Button onClick={setData}>Paste GeoJSON</Button>
+        <Button onClick={setData}>Paste GeoJSON (replace all)</Button>
+        &nbsp;
+        <Button onClick={addAnItem}>Paste GeoJSON (add an item)</Button>
         &nbsp;
         <Button
           disabled={!viewerPosition}
