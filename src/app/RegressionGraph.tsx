@@ -7,18 +7,15 @@ function RegressionGraph({
   regressionResult: Result;
   dataPoints: readonly [number, number][];
 }) {
-  const minY = regressionResult.points.reduce(
-    (acc, item) => (item[1] < acc ? item[1] : acc),
-    Infinity
-  );
-
-  const maxY = regressionResult.points.reduce(
-    (acc, item) => (item[1] > acc ? item[1] : acc),
-    -Infinity
-  );
-
   const predictedBearingAtX0 = regressionResult.predict(0)[1];
   const predictedBearingAtX100 = regressionResult.predict(100)[1];
+
+  const imagePercentToSvgX = (percentX: number) => (percentX / 100) * 400;
+
+  const bearingToSvgY = (bearing: number) =>
+    200 -
+    (400 * (bearing - predictedBearingAtX0)) /
+      (predictedBearingAtX100 - predictedBearingAtX0);
 
   const yNotches: number[] = [];
   for (
@@ -28,8 +25,6 @@ function RegressionGraph({
   ) {
     yNotches.push(bearing);
   }
-
-  const yPerDegree = 400 / (predictedBearingAtX100 - predictedBearingAtX0);
 
   return (
     <svg
@@ -60,9 +55,9 @@ function RegressionGraph({
 
         <line
           id="x-axis"
-          x1={0}
+          x1={imagePercentToSvgX(0)}
           y1={0}
-          x2={400}
+          x2={imagePercentToSvgX(100)}
           y2={0}
           strokeWidth={"0.2"}
           stroke="black"
@@ -97,8 +92,8 @@ function RegressionGraph({
             key={bearing}
             x1={200 - (bearing % 5 === 0 ? 10 : 3)}
             x2={200 + (bearing % 5 === 0 ? 10 : 3)}
-            y1={200 - (bearing - predictedBearingAtX0) * yPerDegree}
-            y2={200 - (bearing - predictedBearingAtX0) * yPerDegree}
+            y1={bearingToSvgY(bearing)}
+            y2={bearingToSvgY(bearing)}
             strokeWidth={"0.2"}
             stroke="black"
           />
@@ -107,8 +102,8 @@ function RegressionGraph({
         {[10, 20, 30, 40, 50, 60, 70, 80, 90].map((pct) => (
           <line
             key={pct}
-            x1={(400 * pct) / 100}
-            x2={(400 * pct) / 100}
+            x1={imagePercentToSvgX(pct)}
+            x2={imagePercentToSvgX(pct)}
             y1={+3}
             y2={-3}
             strokeWidth={"0.2"}
@@ -118,12 +113,21 @@ function RegressionGraph({
 
         {dataPoints.map((point) => (
           <circle
-            cx={point[0] * 4}
-            cy={200 - (point[1] - predictedBearingAtX0) * yPerDegree}
+            cx={imagePercentToSvgX(point[0])}
+            cy={bearingToSvgY(point[1])}
             r={1}
             fill="black"
           />
         ))}
+
+        <line
+          x1={imagePercentToSvgX(0)}
+          x2={imagePercentToSvgX(100)}
+          y1={bearingToSvgY(predictedBearingAtX0)}
+          y2={bearingToSvgY(predictedBearingAtX100)}
+          strokeWidth={"0.2"}
+          stroke="blue"
+        />
       </g>
     </svg>
   );
