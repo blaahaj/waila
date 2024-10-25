@@ -4,13 +4,27 @@ export type WorldItem = {
   readonly id: string;
   readonly label: string;
   readonly points: LatLong[];
-  geoJsonFeature: GeoJSON.Feature;
+  readonly geoJsonFeature: GeoJSON.Feature;
+};
+
+export type PointAndBearing = {
+  readonly latlong: LatLong;
+  readonly bearing: number;
+};
+
+export type Bearings = {
+  readonly all: readonly number[];
+  readonly allWithPoints: readonly PointAndBearing[];
+  readonly min: number;
+  readonly minWithPoint: PointAndBearing;
+  readonly max: number;
+  readonly maxWithPoint: PointAndBearing;
 };
 
 export function addBearingsToWorldItem(
   worldItem: WorldItem,
   origin: LatLong
-): WorldItem & { bearings: { all: number[]; min: number; max: number } } {
+): WorldItem & { bearings: Bearings } {
   const latlongToBearing = (latlong: LatLong): number =>
     90 -
     (Math.atan2(
@@ -20,15 +34,21 @@ export function addBearingsToWorldItem(
       Math.PI) *
       180;
 
-  const bearings = worldItem.points.map(latlongToBearing);
-  const sorted = bearings.toSorted((a, b) => a - b);
+  const pointsWithBearings = worldItem.points.map((latlong) => ({
+    latlong,
+    bearing: latlongToBearing(latlong),
+  }));
+  const sorted = pointsWithBearings.toSorted((a, b) => a.bearing - b.bearing);
 
   return {
     ...worldItem,
     bearings: {
-      all: bearings,
-      min: sorted[0],
-      max: sorted[sorted.length - 1],
+      all: pointsWithBearings.map((pair) => pair.bearing),
+      allWithPoints: pointsWithBearings,
+      min: sorted[0].bearing,
+      minWithPoint: sorted[0],
+      max: sorted[sorted.length - 1].bearing,
+      maxWithPoint: sorted[sorted.length - 1],
     },
   };
 }

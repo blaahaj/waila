@@ -38,6 +38,10 @@ export function parseRectangle(spec: string): [LatLong, LatLong] | null {
   ];
 }
 
+export function latlongToGeoJsonPosition(latlong: LatLong): GeoJSON.Position {
+  return [latlong.degreesEast, latlong.degreesNorth];
+}
+
 // const qFloat = (name: string) => `(?<${name}Sign>[+-]?)(?<${name}Value>\\d+\\.\\d+)`;
 // const qDMS = (name: string) => `(?<${name}Sign>[+-]?)(?<${name}Value>\\d+\\.\\d+)`;
 
