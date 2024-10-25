@@ -5,9 +5,6 @@ let id = 0;
 export const logRender = <P>(
   fn: FunctionComponent<P>
 ): FunctionComponent<P> => {
-  const name = fn.name;
-  const displayName = fn.displayName;
-
   const newFunc = function (...args: Parameters<FunctionComponent<P>>) {
     ++id;
     const t0 = new Date().getTime();

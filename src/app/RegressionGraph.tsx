@@ -1,17 +1,16 @@
-import type { Result } from "regression";
 import type { PairOfRegressions } from "./bearing";
 
-function* steppedRange(
-  start: number,
-  end: number,
-  step: number
-): Generator<number> {
-  let n = start;
-  while (n <= end) {
-    yield n;
-    n += step;
-  }
-}
+// function* steppedRange(
+//   start: number,
+//   end: number,
+//   step: number
+// ): Generator<number> {
+//   let n = start;
+//   while (n <= end) {
+//     yield n;
+//     n += step;
+//   }
+// }
 
 function RegressionGraph({
   pairOfRegressions,
@@ -124,14 +123,17 @@ function RegressionGraph({
           />
         ))}
 
-        {pairOfRegressions.imagePercentXToBearing.inputData.map((point) => (
-          <circle
-            cx={imagePercentToSvgX(point[0])}
-            cy={bearingToSvgY(point[1])}
-            r={1}
-            fill="black"
-          />
-        ))}
+        {pairOfRegressions.imagePercentXToBearing.inputData.map(
+          (point, index) => (
+            <circle
+              key={index}
+              cx={imagePercentToSvgX(point[0])}
+              cy={bearingToSvgY(point[1])}
+              r={1}
+              fill="black"
+            />
+          )
+        )}
 
         {/* <line
           x1={imagePercentToSvgX(0)}

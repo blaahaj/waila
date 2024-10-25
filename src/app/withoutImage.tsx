@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@zendeskgarden/react-buttons";
 import { Grid } from "@zendeskgarden/react-grid";
 import { Well } from "@zendeskgarden/react-notifications";
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
@@ -17,6 +16,7 @@ function WithoutImage({
 }: {
   setImageSource: (source: string) => void;
 }) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [dropTargetVisible, setDropTargetVisible] = useState(false);
 
   const handleTransfer = useMemo(

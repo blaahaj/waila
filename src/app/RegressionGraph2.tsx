@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { polynomial, type Result } from "regression";
+import { polynomial } from "regression";
 import type { PairOfRegressions } from "./bearing";
 
 function* steppedRange(
@@ -118,8 +118,9 @@ function RegressionGraph2({
           </g>
 
           <g id="newDataSet">
-            {newDataSet.map(([bearing, skew]) => (
+            {newDataSet.map(([bearing, skew], index) => (
               <circle
+                key={index}
                 cx={bearing * 2 * 100}
                 cy={(skew / assumedMaxSkew) * 100}
                 r={1}

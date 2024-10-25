@@ -3,19 +3,18 @@ import { Grid } from "@zendeskgarden/react-grid";
 import { Table } from "@zendeskgarden/react-tables";
 import { LatLong } from "./LatLong";
 import { useMemo, type Dispatch, type SetStateAction } from "react";
-import regression from "regression";
 import { addBearingsToWorldItem, type WorldItem } from "./worldItem";
 import GeoJSON from "geojson";
 import { randomUUID } from "crypto";
 import { longVee } from "./geoJson";
 
-const averagePositionOf = (points: LatLong[]): LatLong => {
-  const degreesNorth =
-    points.reduce((acc, item) => acc + item.degreesNorth, 0) / points.length;
-  const degreesEast =
-    points.reduce((acc, item) => acc + item.degreesEast, 0) / points.length;
-  return { degreesNorth, degreesEast };
-};
+// const averagePositionOf = (points: LatLong[]): LatLong => {
+//   const degreesNorth =
+//     points.reduce((acc, item) => acc + item.degreesNorth, 0) / points.length;
+//   const degreesEast =
+//     points.reduce((acc, item) => acc + item.degreesEast, 0) / points.length;
+//   return { degreesNorth, degreesEast };
+// };
 
 function WorldItemsTable({
   worldItems,
@@ -41,7 +40,7 @@ function WorldItemsTable({
 
         setWorldItems(
           polygonFeatures.map(
-            (polygonFeature, index): WorldItem => ({
+            (polygonFeature): WorldItem => ({
               id:
                 polygonFeature.properties?.id ?? `unstable-id:${randomUUID()}`,
               label: polygonFeature.properties?.label ?? "[unnamed]",
@@ -83,12 +82,10 @@ function WorldItemsTable({
           geoJsonFeature: data,
         };
 
-        setWorldItems((worldItems) => [
-          ...worldItems.filter((i) => i.id !== newItem.id),
+        setWorldItems((current) => [
+          ...current.filter((i) => i.id !== newItem.id),
           newItem,
         ]);
-      } else {
-        return worldItems;
       }
     },
     [setWorldItems]

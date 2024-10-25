@@ -10,7 +10,8 @@ export interface PairedItem {
 
 export function naiveLinear(
   dataPoints: readonly regression.DataPoint[],
-  _options?: regression.Options
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  options?: regression.Options
 ): regression.Result {
   const sorted = dataPoints.toSorted((a, b) => a[0] - b[0]);
   const min = sorted[0];
