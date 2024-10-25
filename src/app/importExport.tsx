@@ -13,7 +13,6 @@ function ImportExport({
   setWorldItems,
   viewerPositionSpec,
   setViewerPositionSpec,
-  viewerPosition,
   setViewerPosition,
 }: {
   imageItems: readonly ImageItem[];

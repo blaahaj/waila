@@ -7,21 +7,20 @@ import {
 } from "react";
 import { type ImageItem, type ImagePosition } from "./imageItem";
 import type { WorldItem } from "./worldItem";
-import regression from "regression";
 import Pins from "@/imageWithPins/pins";
 import type { LatLong } from "./LatLong";
 import type { PairOfRegressions } from "./bearing";
 
 type RectangleDragState =
   | {
-      state: "pre";
-      startTime: number;
-      startPosition: ImagePosition;
+      readonly state: "pre";
+      readonly startTime: number;
+      readonly startPosition: ImagePosition;
     }
   | {
-      state: "dragging";
-      startPosition: ImagePosition;
-      endPosition: ImagePosition;
+      readonly state: "dragging";
+      readonly startPosition: ImagePosition;
+      readonly endPosition: ImagePosition;
     };
 
 function ImageWithPins({
@@ -141,7 +140,7 @@ function ImageWithPins({
 
           setDrag(undefined);
         },
-        [drag]
+        [drag, imageItems, setImageItems]
       )}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}

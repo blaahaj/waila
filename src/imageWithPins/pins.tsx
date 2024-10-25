@@ -1,10 +1,8 @@
 import type { PairOfRegressions } from "@/app/bearing";
 import type { ImageItem } from "@/app/imageItem";
 import type { LatLong } from "@/app/LatLong";
-import ViewerPosition from "@/app/viewerPosition";
 import { addBearingsToWorldItem, type WorldItem } from "@/app/worldItem";
 import type { RefObject } from "react";
-import regression from "regression";
 
 function Pins({
   imageItems,

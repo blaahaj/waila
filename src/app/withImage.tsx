@@ -7,19 +7,13 @@ import ImageWithPins from "./imageWithPins";
 import ImportExport from "./importExport";
 import type { ImageItem } from "./imageItem";
 import type { WorldItem } from "./worldItem";
-import {
-  buildRegression,
-  leastSquaresLinear,
-  naiveLinear,
-  type PairedItem,
-} from "./bearing";
+import { buildRegression, type PairedItem } from "./bearing";
 import ImageItemsTable from "./imageItemsTable";
 import WorldItemsTable from "./worldItemsTable";
 import ViewerPosition from "./viewerPosition";
 import { Tabs } from "@zendeskgarden/react-tabs";
 import { polynomial } from "regression";
 import RegressionGraph from "./RegressionGraph";
-import RegressionGraph2 from "./RegressionGraph2";
 
 function WithImage({
   imageSource,

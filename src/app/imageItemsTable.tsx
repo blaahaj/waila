@@ -1,9 +1,7 @@
 import { Option } from "@zendeskgarden/react-dropdowns";
-import { Grid } from "@zendeskgarden/react-grid";
 import { LatLong } from "./LatLong";
 import { useMemo, type Dispatch, type SetStateAction } from "react";
 import { type ImageItem } from "./imageItem";
-import regression from "regression";
 import { addBearingsToWorldItem, type WorldItem } from "./worldItem";
 import ImageItemTableRow from "./imageItemTableRow";
 import { Table } from "@zendeskgarden/react-tables";
@@ -30,6 +28,7 @@ function ImageItemsTable({
   }
 
   const expandedChildren = useMemo(
+    // eslint-disable-next-line react/display-name
     () => (excludedItem: ImageItem) =>
       (
         <>
@@ -55,7 +54,7 @@ function ImageItemsTable({
           ))}
         </>
       ),
-    [viewerPosition, imageItems, worldItems, new Date().getTime()]
+    [imageItems, worldItems]
   );
 
   return (

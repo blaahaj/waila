@@ -1,11 +1,9 @@
 import { Anchor, Button } from "@zendeskgarden/react-buttons";
 import { Field as DField, Combobox } from "@zendeskgarden/react-dropdowns";
 import { Input } from "@zendeskgarden/react-forms";
-import { Grid } from "@zendeskgarden/react-grid";
 import type { ImageItem } from "./imageItem";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { addBearingsToWorldItem, type WorldItem } from "./worldItem";
-import regression from "regression";
 import type { LatLong } from "./LatLong";
 import { addBearingsToImageItem, type PairOfRegressions } from "./bearing";
 import { geoJsonUrl } from "./geoJson";
