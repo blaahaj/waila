@@ -1,4 +1,4 @@
-import type { LatLong } from "./LatLong";
+import { latlongToGeoJsonPosition, type LatLong } from "./LatLong";
 
 const radiusInDegrees = 0.5; // 30km or thereabouts
 
@@ -18,11 +18,7 @@ export function longVee(
       type: "Feature",
       properties: {},
       geometry: {
-        coordinates: [
-          points[0],
-          [origin.degreesEast, origin.degreesNorth],
-          points[1],
-        ],
+        coordinates: [points[0], latlongToGeoJsonPosition(origin), points[1]],
         type: "LineString",
       },
       id: 0,
