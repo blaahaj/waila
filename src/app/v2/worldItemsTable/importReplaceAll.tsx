@@ -1,7 +1,7 @@
 import { Button } from "@zendeskgarden/react-buttons";
 import { useMemo, type Dispatch, type SetStateAction } from "react";
 import type { WorldItem } from "../worldItem";
-import { randomUUID } from "crypto";
+// import { randomUUID } from "crypto";
 
 function ImportReplaceAll({
   setWorldItems,
@@ -25,7 +25,9 @@ function ImportReplaceAll({
           polygonFeatures.map(
             (polygonFeature): WorldItem => ({
               id:
-                polygonFeature.properties?.id ?? `unstable-id:${randomUUID()}`,
+                polygonFeature.properties?.id ??
+                polygonFeature.id ??
+                `unstable-id:${crypto.randomUUID()}`,
               label: polygonFeature.properties?.label ?? "[unnamed]",
               points: polygonFeature.geometry.coordinates
                 .flat(1)

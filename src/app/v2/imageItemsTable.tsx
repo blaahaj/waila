@@ -5,7 +5,7 @@ import { type ImageItem } from "./imageItem";
 import { addBearingsToWorldItem, type WorldItem } from "./worldItem";
 import ImageItemTableRow from "./imageItemTableRow";
 import { Table } from "@zendeskgarden/react-tables";
-import type { PairOfRegressions } from "./bearing";
+import { normaliseBearing, type PairOfRegressions } from "./bearing";
 import { Grid } from "@zendeskgarden/react-grid";
 import { Button } from "@zendeskgarden/react-buttons";
 
@@ -48,7 +48,10 @@ function ImageItemsTable({
             >
               {"bearings" in worldItem ? (
                 <>
-                  {(worldItem.bearings as { min: number }).min.toFixed(3)}&deg;{" "}
+                  {normaliseBearing(
+                    (worldItem.bearings as { min: number }).min
+                  ).toFixed(3)}
+                  &deg;{" "}
                 </>
               ) : null}
               {worldItem.label}

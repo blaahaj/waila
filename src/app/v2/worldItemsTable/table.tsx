@@ -1,6 +1,7 @@
 import { Table } from "@zendeskgarden/react-tables";
 import { addBearingsToWorldItem, type WorldItem } from "../worldItem";
 import type { LatLong } from "../LatLong";
+import { normaliseBearing } from "../bearing";
 
 function WorldItemsTable({
   worldItems,
@@ -34,7 +35,8 @@ function WorldItemsTable({
               <Table.Cell>
                 {bearings ? (
                   <>
-                    {bearings.min.toFixed(3)}&deg; – {bearings.max.toFixed(3)}
+                    {normaliseBearing(bearings.min).toFixed(3)}&deg; –{" "}
+                    {normaliseBearing(bearings.max).toFixed(3)}
                     &deg;
                   </>
                 ) : null}

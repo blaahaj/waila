@@ -53,8 +53,6 @@ export default function Home() {
     { precision: 10, order: 2 }
   );
 
-  console.log({ imageItems });
-
   const [activeTab, setActiveTab] = useState("selectImage");
 
   return (
