@@ -1,7 +1,7 @@
 "use client";
 import { DEFAULT_THEME, ThemeProvider } from "@zendeskgarden/react-theming";
 import WithImage from "./withImage";
-import WithoutImage from "./withoutImage";
+// import WithoutImage from "./withoutImage";
 import { useState } from "react";
 
 export default function Home() {
@@ -15,7 +15,8 @@ export default function Home() {
           clearImage={() => setImageSource(undefined)}
         />
       ) : (
-        <WithoutImage setImageSource={setImageSource} />
+        ""
+        // <WithoutImage setImageSource={setImageSource} />
       )}
     </ThemeProvider>
   );

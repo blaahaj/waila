@@ -1,5 +1,5 @@
 import { Grid } from "@zendeskgarden/react-grid";
-import WorldItemsTableExtracted from "@/app/worldItemsTable/table";
+import WorldItemsTableExtracted from "./table";
 import { LatLong } from "../LatLong";
 import { type Dispatch, type SetStateAction } from "react";
 import { type WorldItem } from "../worldItem";
