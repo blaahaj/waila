@@ -1,7 +1,7 @@
-import type { PairOfRegressions } from "@/app/bearing";
-import type { ImageItem } from "@/app/imageItem";
-import type { LatLong } from "@/app/LatLong";
-import { addBearingsToWorldItem, type WorldItem } from "@/app/worldItem";
+import type { PairOfRegressions } from "../bearing";
+import type { ImageItem } from "../imageItem";
+import type { LatLong } from "../LatLong";
+import { addBearingsToWorldItem, type WorldItem } from "../worldItem";
 import type { RefObject } from "react";
 
 function Pins({
