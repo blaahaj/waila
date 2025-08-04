@@ -1,4 +1,4 @@
-"use client";
+import * as React from "react";
 
 import { Button } from "@zendeskgarden/react-buttons";
 import { Notification } from "@zendeskgarden/react-notifications";

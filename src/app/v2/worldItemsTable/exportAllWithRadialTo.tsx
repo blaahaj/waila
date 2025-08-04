@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { Button } from "@zendeskgarden/react-buttons";
 import type { WorldItem } from "../worldItem";
 import { generate } from "./generate";

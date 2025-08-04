@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import type { PairOfRegressions } from "../bearing";
 import type { ImageItem } from "../imageItem";
 import type { LatLong } from "../LatLong";

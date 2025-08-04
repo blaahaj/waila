@@ -1,0 +1,13 @@
+@font-face {
+  font-family: "Geist sans";
+  src: url(GeistVF.woff);
+}
+
+@font-face {
+  font-family: "Geist mono";
+  src: url(GeistMonoVF.woff);
+}
+
+body {
+  font-family: "Geist sans";
+}

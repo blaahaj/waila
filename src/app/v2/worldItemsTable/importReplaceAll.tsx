@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { Button } from "@zendeskgarden/react-buttons";
 import { useMemo, type Dispatch, type SetStateAction } from "react";
 import type { WorldItem } from "../worldItem";

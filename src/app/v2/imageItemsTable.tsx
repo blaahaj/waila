@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { Option } from "@zendeskgarden/react-dropdowns";
 import { LatLong } from "./LatLong";
 import { useMemo, type Dispatch, type SetStateAction } from "react";

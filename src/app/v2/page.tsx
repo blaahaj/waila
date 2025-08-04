@@ -1,4 +1,4 @@
-"use client";
+import * as React from "react";
 
 import { DEFAULT_THEME, ThemeProvider } from "@zendeskgarden/react-theming";
 import { useState } from "react";
@@ -14,6 +14,9 @@ import WorldItemsTable from "./worldItemsTable";
 import ImageWithPins from "./imageWithPins/index";
 import { LeafletProvider } from "./useLeaflet";
 import { ReactLeafletProvider } from "./useReactLeaflet";
+import ImportExport from "./ImportExport";
+import RegressionGraph from "./RegressionGraph";
+import RegressionGraph2 from "./RegressionGraph2";
 
 export default function Home() {
   const [imageSource, setImageSource] = useState<string>();
@@ -98,6 +101,11 @@ export default function Home() {
                           </Tabs.Tab>
                           <Tabs.Tab item="imageItems">Image items</Tabs.Tab>
                           <Tabs.Tab item="worldItems">World items</Tabs.Tab>
+                          <Tabs.Tab item="regression">Regression</Tabs.Tab>
+                          <Tabs.Tab item="regression 2">Regression 2</Tabs.Tab>
+                          <Tabs.Tab item="importExport">
+                            Import / Export
+                          </Tabs.Tab>
                         </Tabs.TabList>
 
                         <Tabs.TabPanel item="selectImage">
@@ -150,6 +158,44 @@ export default function Home() {
                                     }
                                   : null
                               }
+                            />
+                          )}
+                        </Tabs.TabPanel>
+                        <Tabs.TabPanel item="regression">
+                          {activeTab === "regression" && (
+                            <>
+                              {pairOfRegressions ? (
+                                <RegressionGraph
+                                  pairOfRegressions={pairOfRegressions}
+                                />
+                              ) : (
+                                "Not enough data yet"
+                              )}
+                            </>
+                          )}
+                        </Tabs.TabPanel>
+                        <Tabs.TabPanel item="regression 2">
+                          {activeTab === "regression 2" && (
+                            <>
+                              {pairOfRegressions ? (
+                                <RegressionGraph2
+                                  pairOfRegressions={pairOfRegressions}
+                                />
+                              ) : (
+                                "Not enough data yet"
+                              )}
+                            </>
+                          )}
+                        </Tabs.TabPanel>
+                        <Tabs.TabPanel item="importExport">
+                          {activeTab === "importExport" && (
+                            <ImportExport
+                              imageItems={imageItems}
+                              setImageItems={setImageItems}
+                              worldItems={worldItems}
+                              setWorldItems={setWorldItems}
+                              cameraPosition={cameraPosition}
+                              setCameraPosition={setCameraPosition}
                             />
                           )}
                         </Tabs.TabPanel>

@@ -1,4 +1,4 @@
-"use client";
+import * as React from "react";
 
 import { Button } from "@zendeskgarden/react-buttons";
 import { Grid } from "@zendeskgarden/react-grid";

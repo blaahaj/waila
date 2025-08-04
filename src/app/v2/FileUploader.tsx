@@ -1,4 +1,4 @@
-"use client";
+import * as React from "react";
 
 import { Grid } from "@zendeskgarden/react-grid";
 import { Well } from "@zendeskgarden/react-notifications";

@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { Grid } from "@zendeskgarden/react-grid";
 import WorldItemsTableExtracted from "./table";
 import { LatLong } from "../LatLong";
