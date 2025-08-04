@@ -1,15 +1,13 @@
-import * as React from "react";
-
-import { useMemo } from "react";
-
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 
-import * as RL from "react-leaflet";
-import type { LeafletMouseEvent } from "leaflet";
-import { Grid } from "@zendeskgarden/react-grid";
 import { Button } from "@zendeskgarden/react-buttons";
+import { Grid } from "@zendeskgarden/react-grid";
+import type { LeafletMouseEvent } from "leaflet";
+import * as React from "react";
+import { useMemo } from "react";
+import * as RL from "react-leaflet";
 
 export const centralCopenhagenIsh: readonly [number, number] = [
   55.68731239016637, 12.563096868347941,

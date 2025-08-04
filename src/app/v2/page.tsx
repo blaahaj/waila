@@ -1,22 +1,22 @@
-import * as React from "react";
-
-import { DEFAULT_THEME, ThemeProvider } from "@zendeskgarden/react-theming";
-import { useState } from "react";
-import { Tabs } from "@zendeskgarden/react-tabs";
 import { Grid } from "@zendeskgarden/react-grid";
-import SelectImageTab from "./SelectImageTab";
-import SetCameraPositionTab from "./SetCameraPositionTab";
+import { Tabs } from "@zendeskgarden/react-tabs";
+import { DEFAULT_THEME, ThemeProvider } from "@zendeskgarden/react-theming";
+import * as React from "react";
+import { useState } from "react";
+
+import { buildRegression, type PairedItem, polynomial } from "./bearing";
 import type { ImageItem } from "./imageItem";
-import type { WorldItem } from "./worldItem";
-import { buildRegression, polynomial, type PairedItem } from "./bearing";
 import ImageItemsTable from "./imageItemsTable";
-import WorldItemsTable from "./worldItemsTable";
 import ImageWithPins from "./imageWithPins/index";
-import { LeafletProvider } from "./useLeaflet";
-import { ReactLeafletProvider } from "./useReactLeaflet";
 import ImportExport from "./ImportExport";
 import RegressionGraph from "./RegressionGraph";
 import RegressionGraph2 from "./RegressionGraph2";
+import SelectImageTab from "./SelectImageTab";
+import SetCameraPositionTab from "./SetCameraPositionTab";
+import { LeafletProvider } from "./useLeaflet";
+import { ReactLeafletProvider } from "./useReactLeaflet";
+import type { WorldItem } from "./worldItem";
+import WorldItemsTable from "./worldItemsTable";
 
 export default function Home() {
   const [imageSource, setImageSource] = useState<string>();

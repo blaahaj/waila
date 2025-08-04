@@ -1,9 +1,9 @@
+import { Table } from "@zendeskgarden/react-tables";
 import * as React from "react";
 
-import { Table } from "@zendeskgarden/react-tables";
-import { addBearingsToWorldItem, type WorldItem } from "../worldItem";
-import type { LatLong } from "../LatLong";
 import { normaliseBearing } from "../bearing";
+import type { LatLong } from "../LatLong";
+import { addBearingsToWorldItem, type WorldItem } from "../worldItem";
 
 function WorldItemsTable({
   worldItems,

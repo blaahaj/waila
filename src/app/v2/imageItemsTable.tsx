@@ -1,15 +1,15 @@
-import * as React from "react";
-
-import { Option } from "@zendeskgarden/react-dropdowns";
-import { LatLong } from "./LatLong";
-import { useMemo, type Dispatch, type SetStateAction } from "react";
-import { type ImageItem } from "./imageItem";
-import { addBearingsToWorldItem, type WorldItem } from "./worldItem";
-import ImageItemTableRow from "./imageItemTableRow";
-import { Table } from "@zendeskgarden/react-tables";
-import { normaliseBearing, type PairOfRegressions } from "./bearing";
-import { Grid } from "@zendeskgarden/react-grid";
 import { Button } from "@zendeskgarden/react-buttons";
+import { Option } from "@zendeskgarden/react-dropdowns";
+import { Grid } from "@zendeskgarden/react-grid";
+import { Table } from "@zendeskgarden/react-tables";
+import * as React from "react";
+import { type Dispatch, type SetStateAction, useMemo } from "react";
+
+import { normaliseBearing, type PairOfRegressions } from "./bearing";
+import { type ImageItem } from "./imageItem";
+import ImageItemTableRow from "./imageItemTableRow";
+import { LatLong } from "./LatLong";
+import { addBearingsToWorldItem, type WorldItem } from "./worldItem";
 
 function ImageItemsTable({
   imageItems,
