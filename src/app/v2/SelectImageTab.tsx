@@ -1,11 +1,11 @@
-import * as React from "react";
-
 import { Button } from "@zendeskgarden/react-buttons";
 import { Grid } from "@zendeskgarden/react-grid";
+import { Well } from "@zendeskgarden/react-notifications";
+import * as React from "react";
 import { useMemo, useState } from "react";
+
 import FileUploader from "./FileUploader";
 import LocalStorageChooser from "./LocalStorageChooser";
-import { Well } from "@zendeskgarden/react-notifications";
 
 export default function SelectImageTab({
   imageSource,

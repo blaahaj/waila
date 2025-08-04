@@ -1,16 +1,16 @@
-import * as React from "react";
-
 import { Anchor, Button } from "@zendeskgarden/react-buttons";
-import { Field as DField, Combobox } from "@zendeskgarden/react-dropdowns";
+import { Combobox, Field as DField } from "@zendeskgarden/react-dropdowns";
 import { Input } from "@zendeskgarden/react-forms";
-import type { ImageItem } from "./imageItem";
-import { useState, type Dispatch, type SetStateAction } from "react";
-import { addBearingsToWorldItem, type WorldItem } from "./worldItem";
-import type { LatLong } from "./LatLong";
-import { addBearingsToImageItem, type PairOfRegressions } from "./bearing";
-import { geoJsonUrl } from "./geoJson";
 // import { logRender } from "./logRender";
 import { Table } from "@zendeskgarden/react-tables";
+import * as React from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
+
+import { addBearingsToImageItem, type PairOfRegressions } from "./bearing";
+import { geoJsonUrl } from "./geoJson";
+import type { ImageItem } from "./imageItem";
+import type { LatLong } from "./LatLong";
+import { addBearingsToWorldItem, type WorldItem } from "./worldItem";
 
 function ImageItemTableRow({
   imageItem,

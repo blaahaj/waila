@@ -1,8 +1,7 @@
-import * as React from "react";
-
 import { Button } from "@zendeskgarden/react-buttons";
 import { Notification } from "@zendeskgarden/react-notifications";
 import { Table } from "@zendeskgarden/react-tables";
+import * as React from "react";
 import { useEffect, useState } from "react";
 
 const LocalStorageChooser = ({
