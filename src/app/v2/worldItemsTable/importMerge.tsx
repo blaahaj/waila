@@ -1,5 +1,7 @@
+import * as React from "react";
+
 import { Button } from "@zendeskgarden/react-buttons";
-import { randomUUID } from "crypto";
+// import { randomUUID } from "crypto";
 import { useMemo, type Dispatch, type SetStateAction } from "react";
 import type { WorldItem } from "../worldItem";
 
@@ -17,7 +19,7 @@ function ImportMerge({
 
       if (data.type === "Feature" && data.geometry.type === "Polygon") {
         data.properties ||= {};
-        data.properties.id ||= randomUUID().toLocaleLowerCase();
+        data.properties.id ||= crypto.randomUUID().toLocaleLowerCase();
         data.properties.label ||= "[unnamed]";
 
         const newItem: WorldItem = {

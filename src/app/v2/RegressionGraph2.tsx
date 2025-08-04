@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { polynomial } from "regression";
 import type { PairOfRegressions } from "./bearing";
+import React from "react";
 
 function* steppedRange(
   start: number,

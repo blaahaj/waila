@@ -41,6 +41,38 @@ export type PairOfRegressions = {
   };
 };
 
+const TAU = Math.PI * 2;
+
+const findAverageAngle = (items: readonly number[]): number => {
+  let x = 0;
+  let y = 0;
+
+  for (const item of items) {
+    x += Math.cos((item / 360) * TAU);
+    y += Math.sin((item / 360) * TAU);
+  }
+
+  return (Math.atan2(y, x) / TAU) * 360;
+};
+
+const normaliseAngles = (
+  items: readonly [number, number][],
+  averageAngle: number
+): [number, number][] => {
+  const low = averageAngle + 3600 + 270;
+
+  return items.map(([imageX, bearing]) => {
+    while (bearing < low) bearing += 360;
+    return [imageX, bearing];
+  });
+};
+
+export const normaliseBearing = (n: number) => {
+  while (n < 0) n += 360;
+  while (n >= 360) n -= 360;
+  return n;
+};
+
 export function buildRegression(
   origin: LatLong | null,
   pairedItems: readonly PairedItem[],
@@ -63,14 +95,17 @@ export function buildRegression(
     ];
   });
 
-  const flippedDataPoints: regression.DataPoint[] = dataPoints.map(
+  const averageBearing = findAverageAngle(dataPoints.map((t) => t[1]));
+  const normalisedDataPoints = normaliseAngles(dataPoints, averageBearing);
+
+  const flippedDataPoints: regression.DataPoint[] = normalisedDataPoints.map(
     ([x, bearing]) => [bearing, x]
   );
 
   return {
     imagePercentXToBearing: {
-      inputData: dataPoints,
-      result: fn(dataPoints, options),
+      inputData: normalisedDataPoints,
+      result: fn(normalisedDataPoints, options),
     },
     bearingToImagePercentX: {
       inputData: flippedDataPoints,
@@ -87,7 +122,7 @@ export function addBearingsToImageItem(
     (corner) =>
       pairOfRegressions.imagePercentXToBearing.result.predict(
         corner.percentX
-      )[1]
+      )[1] % 360
   );
   const sorted = all.toSorted((a, b) => a - b);
 

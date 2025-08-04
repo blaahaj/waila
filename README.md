@@ -12,9 +12,11 @@ If you're not using `asdf`, you'll need to set up the tools as listed in [.tool-
 
 ```shell
 pnpm install
-pnpm run dev
+pnpm exec webpack
 ```
 
 ## Using the tool
+
+Open the [page](./public/index.html).
 
 See the [Manual](./docs/Manual.md)

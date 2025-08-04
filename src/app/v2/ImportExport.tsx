@@ -1,6 +1,7 @@
+import React from "react";
+
 import { useMemo, type Dispatch, type SetStateAction } from "react";
 import type { ImageItem } from "./imageItem";
-import { LatLong } from "./LatLong";
 import { Button } from "@zendeskgarden/react-buttons";
 import { Grid } from "@zendeskgarden/react-grid";
 import { Well } from "@zendeskgarden/react-notifications";
@@ -11,21 +12,20 @@ function ImportExport({
   setImageItems,
   worldItems,
   setWorldItems,
-  viewerPositionSpec,
-  setViewerPositionSpec,
-  setViewerPosition,
+  cameraPosition,
+  setCameraPosition,
 }: {
   imageItems: readonly ImageItem[];
   setImageItems: Dispatch<SetStateAction<ImageItem[]>>;
   worldItems: readonly WorldItem[];
   setWorldItems: Dispatch<SetStateAction<WorldItem[]>>;
-  viewerPositionSpec: string;
-  setViewerPositionSpec: Dispatch<SetStateAction<string>>;
-  viewerPosition: LatLong | null;
-  setViewerPosition: Dispatch<SetStateAction<LatLong | null>>;
+  cameraPosition: readonly [number, number] | undefined;
+  setCameraPosition: Dispatch<
+    SetStateAction<readonly [number, number] | undefined>
+  >;
 }) {
   const currentData = {
-    viewerPositionSpec,
+    cameraPosition: cameraPosition ?? null,
     imageItems,
     worldItems,
   };
@@ -37,14 +37,11 @@ function ImportExport({
 
       const data = JSON.parse(json);
 
-      const pos = data.viewerPositionSpec ?? "";
-      setViewerPositionSpec(pos);
-      setViewerPosition(LatLong.parse(pos));
-
+      setCameraPosition(data.cameraPosition ?? undefined);
       setImageItems(data.imageItems ?? []);
       setWorldItems(data.worldItems ?? []);
     },
-    [setImageItems, setWorldItems, setViewerPosition, setViewerPositionSpec]
+    [setImageItems, setWorldItems, setCameraPosition]
   );
 
   const content = JSON.stringify(currentData, null, 2);

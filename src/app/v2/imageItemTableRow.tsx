@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { Anchor, Button } from "@zendeskgarden/react-buttons";
 import { Field as DField, Combobox } from "@zendeskgarden/react-dropdowns";
 import { Input } from "@zendeskgarden/react-forms";
@@ -7,7 +9,7 @@ import { addBearingsToWorldItem, type WorldItem } from "./worldItem";
 import type { LatLong } from "./LatLong";
 import { addBearingsToImageItem, type PairOfRegressions } from "./bearing";
 import { geoJsonUrl } from "./geoJson";
-import { logRender } from "./logRender";
+// import { logRender } from "./logRender";
 import { Table } from "@zendeskgarden/react-tables";
 
 function ImageItemTableRow({
@@ -40,6 +42,13 @@ function ImageItemTableRow({
       ? addBearingsToWorldItem(worldItem, viewerPosition).bearings
       : null;
 
+  const delta = (bearing1: number, bearing2: number): number => {
+    let d = bearing2 - bearing1;
+    while (d < -180) d += 360;
+    while (d > +180) d -= 360;
+    return d;
+  };
+
   return (
     <Table.Row key={imageItem.id} style={{ marginBottom: "0.5em" }}>
       <Table.Cell style={{ width: "4em" }}>
@@ -60,12 +69,9 @@ function ImageItemTableRow({
           {actualBearings && predictedBearings && (
             <div>
               a:
-              {actualBearings[minOrMax] >= predictedBearings[minOrMax]
-                ? "+"
-                : "-"}
-              {Math.abs(
-                actualBearings[minOrMax] - predictedBearings[minOrMax]
-              ).toFixed(3)}
+              {delta(actualBearings[minOrMax], predictedBearings[minOrMax])
+                .toFixed(3)
+                .replace(/^(?!-)/, "+")}
               &deg;
             </div>
           )}
@@ -104,6 +110,7 @@ function ImageItemTableRow({
       <Table.Cell>
         <DField>
           <Combobox
+            listboxAriaLabel="World items"
             isExpanded={expanded}
             style={{ width: expanded ? "20em" : undefined }}
             isEditable={false}
@@ -153,4 +160,4 @@ function ImageItemTableRow({
   );
 }
 
-export default logRender(ImageItemTableRow);
+export default ImageItemTableRow;

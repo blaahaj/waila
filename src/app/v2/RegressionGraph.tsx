@@ -1,4 +1,5 @@
-import type { PairOfRegressions } from "./bearing";
+import { normaliseBearing, type PairOfRegressions } from "./bearing";
+import React from "react";
 
 // function* steppedRange(
 //   start: number,
@@ -92,11 +93,11 @@ function RegressionGraph({
         </text>
 
         <text x={210} y={-200} style={{ fontSize: "8pt" }}>
-          {predictedBearingAtX100.toFixed(3)}&deg;
+          {normaliseBearing(predictedBearingAtX100).toFixed(3)}&deg;
         </text>
 
         <text x={210} y={200} style={{ fontSize: "8pt" }}>
-          {predictedBearingAtX0.toFixed(3)}&deg;
+          {normaliseBearing(predictedBearingAtX0).toFixed(3)}&deg;
         </text>
 
         {yNotches.map((bearing) => (

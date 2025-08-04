@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import {
   useMemo,
   useRef,
@@ -5,11 +7,11 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { type ImageItem, type ImagePosition } from "./imageItem";
-import type { WorldItem } from "./worldItem";
-import Pins from "@/imageWithPins/pins";
-import type { LatLong } from "./LatLong";
-import type { PairOfRegressions } from "./bearing";
+import { type ImageItem, type ImagePosition } from "../imageItem";
+import type { WorldItem } from "../worldItem";
+import Pins from "./pins";
+import type { LatLong } from "../LatLong";
+import type { PairOfRegressions } from "../bearing";
 
 type RectangleDragState =
   | {
@@ -192,14 +194,16 @@ function ImageWithPins({
           );
         })()}
 
-      <Pins
-        imageItems={imageItems}
-        worldItems={worldItems}
-        imageRef={imageRef}
-        showPredictedPositions={showPredictedPositions}
-        pairOfRegressions={pairOfRegressions}
-        viewerPosition={viewerPosition}
-      />
+      {imageRef.current && (
+        <Pins
+          imageItems={imageItems}
+          worldItems={worldItems}
+          imageRef={imageRef}
+          showPredictedPositions={showPredictedPositions}
+          pairOfRegressions={pairOfRegressions}
+          viewerPosition={viewerPosition}
+        />
+      )}
     </div>
   );
 }

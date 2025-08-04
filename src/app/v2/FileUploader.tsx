@@ -1,4 +1,5 @@
-"use client";
+import * as React from "react";
+
 import { Grid } from "@zendeskgarden/react-grid";
 import { Well } from "@zendeskgarden/react-notifications";
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
@@ -11,13 +12,30 @@ const debugEvents: readonly (keyof HTMLElementEventMap)[] = [
   "paste",
 ];
 
-function WithoutImage({
+export default function FileUploader({
   setImageSource,
+  reloadList,
 }: {
-  setImageSource: (source: string) => void;
+  setImageSource: React.Dispatch<React.SetStateAction<string | undefined>>;
+  reloadList: () => void;
 }) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [dropTargetVisible, setDropTargetVisible] = useState(false);
+
+  const onImageFile = useMemo(
+    () => async (f: File) => {
+      const dir = await navigator.storage.getDirectory();
+      const localFile = await dir.getFileHandle(f.name, {
+        create: true,
+      });
+      const w = await localFile.createWritable();
+      await w.write(await f.arrayBuffer());
+      await w.close();
+      reloadList();
+
+      setImageSource(URL.createObjectURL(f));
+    },
+    [setImageSource, reloadList]
+  );
 
   const handleTransfer = useMemo(
     () => (transfer: DataTransfer | null) => {
@@ -28,25 +46,32 @@ function WithoutImage({
 
           const file = item.getAsFile();
           if (file) {
-            setImageSource(URL.createObjectURL(file));
+            onImageFile(file);
           }
         }
       }
     },
-    [setImageSource]
+    [onImageFile]
   );
 
   const handleFileUpload = useMemo(
     () => (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.files?.length === 1) {
-        setImageSource(URL.createObjectURL(e.target.files[0]));
+        onImageFile(e.target.files[0]);
       }
     },
-    [setImageSource]
+    [onImageFile]
   );
 
   const dumpEvent = useMemo(
     () => (event: Event) => {
+      if (event.type !== "dragover") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        console.debug(`${event.type} ${(event.target as any).nodeName}`, {
+          event,
+        });
+      }
+
       if (["dragover", "drop"].includes(event.type)) event.preventDefault();
 
       if (event.type === "dragenter") setDropTargetVisible(true);
@@ -78,21 +103,20 @@ function WithoutImage({
   }, [dumpEvent]);
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Well>
+    <div>
+      <main>
+        <Well
+          style={{
+            border: dropTargetVisible ? "0.2em dashed #555" : undefined,
+          }}
+        >
           <Grid>
-            <Grid.Row>Choose an image file</Grid.Row>
             <Grid.Row>
               <input type="file" onChange={handleFileUpload} />
             </Grid.Row>
-            <Grid.Row>or drag and drop an image file here</Grid.Row>
-            <Grid.Row>or paste an image into this page</Grid.Row>
           </Grid>
         </Well>
       </main>
     </div>
   );
 }
-
-export default WithoutImage;
